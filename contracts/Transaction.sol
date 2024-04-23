@@ -10,6 +10,7 @@ contract Transaction is ERC20 {
         string userID;
         bytes32 token;
         uint[] accounts_id;
+        uint[] transactions_id;
     }
 
     mapping(address => User) public users;

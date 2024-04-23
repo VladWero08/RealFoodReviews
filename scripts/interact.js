@@ -6,7 +6,7 @@ const { TLSSocket } = require("tls");
 async function interact() {
     [owner, user1] = await ethers.getSigners();
 
-    let deployedTokenAddress = process.env.DEPLOYED_TOKEN_ADRESS
+    let deployedTokenAddress = process.env.DEPLOYED_TOKEN_ADDRESS
     let token = await ethers.getContractAt("MyERC20", deployedTokenAddress)
 
     // Call some methods from the token
