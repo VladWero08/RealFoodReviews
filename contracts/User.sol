@@ -20,14 +20,21 @@ contract UserContract {
     mapping(uint => User) public users;
     uint public userCount;
 
+    event UserAdded(uint userCount);
+    event OrderPlaced(uint orderID, uint userID);
+
     function createUser(bytes32 _metaMaskID) external {
         userCount++;
         users[userCount] = User(userCount, new MetaMaskID[](0), new uint[](0));
         users[userCount].metaMaskIDs.push(MetaMaskID(userCount, _metaMaskID));
+
+        emit UserAdded(userCount - 1);
     }
     
     function addOrder(uint _userID, uint _orderID) external {
         users[_userID].orders.push(_orderID);
+
+        emit OrderPlaced(_orderID, _userID);
     }
 }
 
