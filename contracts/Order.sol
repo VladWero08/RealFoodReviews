@@ -1,40 +1,26 @@
-// SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
+import "./MyERC20.sol";
+
 contract OrderContract {
-    struct Order {
-        uint transactionID;
-        uint status; // 0: failed, 1: success
-        address from;
-        address to;
-        uint balance;
-        uint timestamp;
-        uint gasCost;
-        uint gasLimit;
-        uint[] reviews; // Reviews associated with this order
+    address public tokenAddress; // Address of the ERC20 token contract
+    MyERC20 token; // Instance of the ERC20 token contract
+
+    event OrderPlaced(address indexed sender, address indexed recipient, uint256 amount);
+
+    constructor(address _tokenAddress) {
+        tokenAddress = _tokenAddress;
+        token = MyERC20(_tokenAddress); // Initialize the ERC20 token instance
     }
 
-    mapping(uint => Order) public orders;
-    uint public orderCount;
+    function placeOrder(address _recipient, uint256 _amount) external {
+        require(_recipient != address(0), "Invalid recipient address");
+        require(_amount > 0, "Invalid order amount");
 
-    event OrderPlaced(uint orderID, uint status, address from, address to, uint balance, uint timestamp, uint gasCost, uint gasLimit);
+        // Transfer tokens from the sender to the recipient
+        token.transferFrom(msg.sender, _recipient, _amount);
 
-    function placeOrder(uint _status, address _from, address _to, uint _balance, uint _gasCost, uint _gasLimit) public {
-        orders[orderCount] = Order(
-            orderCount,
-            _status,
-            _from,
-            _to,
-            _balance,
-            block.timestamp,
-            _gasCost,
-            _gasLimit,
-            new uint[](0)
-        );
-        orderCount++;
-
-        emit OrderPlaced(orderCount - 1, _status, _from, _to, _balance, block.timestamp, _gasCost, _gasLimit);
+        // Emit an event to log the order placement
+        emit OrderPlaced(msg.sender, _recipient, _amount);
     }
-
-    // Additional functions for order-related operations can be added here
 }

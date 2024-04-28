@@ -1,33 +1,31 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./MyERC20.sol";
 
-contract UserContract {
+contract User {
     
-    // maybe a string is enough because we already append to the users[userCount]  
-    struct MetaMaskID {
+    struct UserStruct {
         uint userID;
-        bytes32 metaMaskID;
-    }
-
-    struct User {
-        uint userID;
-        MetaMaskID[] metaMaskIDs;
+        address metaMaskIDs;
         uint[] orders;
     }
 
-    mapping(uint => User) public users;
+    MyERC20 public tokenContract;
+
+    mapping(uint => UserStruct) public users;
     uint public userCount;
 
     event UserAdded(uint userCount);
     event OrderPlaced(uint orderID, uint userID);
 
-    function createUser(bytes32 _metaMaskID) external {
-        userCount++;
-        users[userCount] = User(userCount, new MetaMaskID[](0), new uint[](0));
-        users[userCount].metaMaskIDs.push(MetaMaskID(userCount, _metaMaskID));
+    constructor(address _tokenAddress) {
+        tokenContract = MyERC20(_tokenAddress);
+    }
 
+    function createUser(address _metaMaskID) external {
+        users[userCount] = UserStruct(userCount, _metaMaskID, new uint[](0));
+        userCount++;
         emit UserAdded(userCount - 1);
     }
     
@@ -35,6 +33,10 @@ contract UserContract {
         users[_userID].orders.push(_orderID);
 
         emit OrderPlaced(_orderID, _userID);
+    }
+
+    function getUserBalance(address userAddress) public view returns (uint) {
+        return tokenContract.balanceOf(userAddress);
     }
 }
 

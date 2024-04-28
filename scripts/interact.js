@@ -6,58 +6,36 @@ const { TLSSocket } = require("tls");
 async function interact() {
     [owner, user1] = await ethers.getSigners();
 
-    let deployedTokenAddress = process.env.DEPLOYED_TOKEN_ADDRESS
-    let token = await ethers.getContractAt("MyERC20", deployedTokenAddress)
-
-    // Call some methods from the token
-    let totalSupply = await token.totalSupply();
-    console.log("total supply: ", totalSupply)
-
-    let userBalance = await token.balanceOf(owner.address)
-    console.log("user balance: ", userBalance)
-
-
-    // Transfer funds from owner to user1
-    let amount = ethers.utils.parseUnits("3", 8) // 3 * 10^8
-    // let transferTx = await token.connect(owner).transfer(user1.address, amount)
-    // await transferTx.wait()
-
-    // Check user 1 balance
-    let user1Balance = await token.balanceOf(user1.address)
-    console.log("user1 balance: ", user1Balance)
-
-    // Approve user 1 to spend from owner
-    allowance = await token.allowance(owner.address, user1.address)
-    console.log("allowance: ", allowance)
-
-    let approveTx = await token.connect(owner).approve(user1.address, amount);
-    await approveTx.wait();
-
-    // Check if there are sufficent funds
-    let amountToSend = ethers.utils.parseUnits("0.000001", 8) // 3 * 10^8
-    let estimatedGas = await token.connect(user1).estimateGas.transferFrom(owner.address, user1.address, amountToSend)
-    console.log("estimatedGas ", estimatedGas)
-    let gasPrice = await ethers.provider.getGasPrice()
-    console.log("gasPrice ", gasPrice)
-    let costInWei = estimatedGas.mul(gasPrice)
-    console.log("gasPrice in wei ", costInWei) // cost in wei
-    let ownerEthBalance = await ethers.provider.getBalance(owner.address)
-    console.log("ownerEthBalance ", ownerEthBalance)
+    let deployedTokenAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44"
+    let token = await ethers.getContractAt("Restaurant", deployedTokenAddress)
     
-    if(ownerEthBalance.gt(costInWei)) {
-        console.log("Enough ETH balance")
-        let transferFrom = await token.connect(user1).transferFrom(owner.address, user1.address, amountToSend)
-        await transferFrom.wait()
-    } else {
-        console.log("Not enough ETH balance")
-    }
+    const metaMaskID = ethers.constants.AddressZero;
+    const name = "Restaurant 2";
+    const description = "Restaurant 2 Description";
 
-    userBalance = await token.balanceOf(owner.address)
-    console.log("user balance at the end: ", userBalance)
-    user1Balance = await token.balanceOf(user1.address)
-    console.log("user1 balance at the end: ", user1Balance)
+    // Create a new restaurant
+    //await token.createRestaurant(metaMaskID, name, description);
+    // // Add a product to the restaurant (assuming restaurant with ID 1 exists)
+    //await token.addProduct(0, 2000, "Product 2 Description", "200g");
+    // Retrieve information about the added product
+    // let productInfo = await token.getProduct(0, 2);
+    // console.log('Product Info:', productInfo);
 
+    // Retrieve the number of restaurants
+    // let restaurantCount = await token.getRestaurantCount();
+    // console.log('Number of restaurants:', restaurantCount.toNumber());
 
+    // Retrieve information about a specific restaurant (assuming restaurant with ID 1 exists)
+    // let restaurantInfo = await token.getRestaurant(0);
+    let restaurantInfo = await token.getAllProductsForRestaurant(0);
+    console.log('Restaurant Info 0:', restaurantInfo); 
+    // console.log('Restaurant Info 0:', restaurantInfo); 
+    // restaurantInfo = await token.getRestaurant(1);
+    // console.log('Restaurant Info 1:', restaurantInfo); 
+    //restaurantInfo = await token.getRestaurant(2);
+    // console.log('Restaurant Info 3:', restaurantInfo); 
+    // restaurantInfo = await token.getRestaurant(3);
+    // console.log('Restaurant Info 4:', restaurantInfo); 
 }
 
 interact()

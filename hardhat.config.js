@@ -12,7 +12,7 @@ module.exports = {
     },
     sepolia: {
       url: "https://ethereum-sepolia-rpc.publicnode.com",
-      accounts: [process.env.ACCOUNT1,  process.env.ACCOUNT2]
+      accounts: ["3d37a49d751c40039190398c680177f52eb19e5b56ab6683daa02625a3d462ab",  "df7e2e435a9f79f5e55045b4f30e3a7ad1ce2b4a0145c1e9733f0cef97e01cb1"]
     }
   },
   defaultNetwork: "hardhat",
