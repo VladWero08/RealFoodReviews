@@ -2,41 +2,44 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "./MyERC20.sol";
+import "./Order.sol";
+import "./Review.sol";
 
 contract User {
     
     struct UserStruct {
-        uint userID;
-        address metaMaskIDs;
-        uint[] orders;
+        address metaMaskID;
     }
 
-    MyERC20 public tokenContract;
+    MyERC20 public myERC20Contract;
+    Order public orderContract;
+    Review public reviewContract;
 
-    mapping(uint => UserStruct) public users;
+    mapping(address => UserStruct) public users;
     uint public userCount;
 
-    event UserAdded(uint userCount);
-    event OrderPlaced(uint orderID, uint userID);
 
-    constructor(address _tokenAddress) {
-        tokenContract = MyERC20(_tokenAddress);
+    event UserAdded(uint userCount, address _uderAddress);
+    event OrderPlaced(address indexed from, address indexed to, uint256 amount);
+    event ReviewAdded(uint _orderID, uint reviewID, uint _rating);
+
+
+    constructor(address _myERC20Address, address _orderAddress, address _reviewAddress) {
+        myERC20Contract = MyERC20(_myERC20Address);
+        orderContract = Order(_orderAddress);
+        reviewContract = Review(_reviewAddress);
+    }
+
+    function userExists(address _metaMaskID) internal view returns (bool) {
+        return users[_metaMaskID].metaMaskID != address(0);
     }
 
     function createUser(address _metaMaskID) external {
-        users[userCount] = UserStruct(userCount, _metaMaskID, new uint[](0));
+        require(!userExists(_metaMaskID), "User already exists");
+        users[_metaMaskID] = UserStruct(_metaMaskID);
         userCount++;
-        emit UserAdded(userCount - 1);
-    }
-    
-    function addOrder(uint _userID, uint _orderID) external {
-        users[_userID].orders.push(_orderID);
 
-        emit OrderPlaced(_orderID, _userID);
-    }
-
-    function getUserBalance(address userAddress) public view returns (uint) {
-        return tokenContract.balanceOf(userAddress);
+        emit UserAdded(userCount -1, _metaMaskID);
     }
 }
 

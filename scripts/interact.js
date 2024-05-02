@@ -6,36 +6,46 @@ const { TLSSocket } = require("tls");
 async function interact() {
     [owner, user1] = await ethers.getSigners();
 
-    let deployedTokenAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44"
-    let token = await ethers.getContractAt("Restaurant", deployedTokenAddress)
+    let deployedTokenAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    let restaurant = await ethers.getContractAt("Restaurant", deployedTokenAddress)
     
-    const metaMaskID = ethers.constants.AddressZero;
-    const name = "Restaurant 2";
-    const description = "Restaurant 2 Description";
+    // deployedTokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    // let order = await ethers.getContractAt("Order", deployedTokenAddress)
+    
+    // deployedTokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    // let review = await ethers.getContractAt("Review", deployedTokenAddress)
+    
+    deployedTokenAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+    let user = await ethers.getContractAt("User", deployedTokenAddress)
+    
+    // deployedTokenAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    // let myerc20 = await ethers.getContractAt("MyERC20", deployedTokenAddress)
+    
 
-    // Create a new restaurant
-    //await token.createRestaurant(metaMaskID, name, description);
-    // // Add a product to the restaurant (assuming restaurant with ID 1 exists)
-    //await token.addProduct(0, 2000, "Product 2 Description", "200g");
-    // Retrieve information about the added product
-    // let productInfo = await token.getProduct(0, 2);
-    // console.log('Product Info:', productInfo);
+    // // create restaurant 
+    const RestaurantMetaMaskID = "0xD83e298cED38baC91838bb1a62078BD0DB5FB6F6";
+    const name = "Restaurant 1";
+    const description = "Restaurant 1 Description";
+    //await restaurant.createRestaurant(RestaurantMetaMaskID, name, description);
 
-    // Retrieve the number of restaurants
-    // let restaurantCount = await token.getRestaurantCount();
-    // console.log('Number of restaurants:', restaurantCount.toNumber());
+    // // create user1
+    const userMetaMaskID = "0x48114256Fd1e080321F1d3a0a6c885971c5eB217"
+    //await user.createUser(userMetaMaskID);
 
-    // Retrieve information about a specific restaurant (assuming restaurant with ID 1 exists)
-    // let restaurantInfo = await token.getRestaurant(0);
-    let restaurantInfo = await token.getAllProductsForRestaurant(0);
-    console.log('Restaurant Info 0:', restaurantInfo); 
-    // console.log('Restaurant Info 0:', restaurantInfo); 
-    // restaurantInfo = await token.getRestaurant(1);
-    // console.log('Restaurant Info 1:', restaurantInfo); 
-    //restaurantInfo = await token.getRestaurant(2);
-    // console.log('Restaurant Info 3:', restaurantInfo); 
-    // restaurantInfo = await token.getRestaurant(3);
-    // console.log('Restaurant Info 4:', restaurantInfo); 
+    // // make a transaction
+    // //await user.placeOrder(RestaurantMetaMaskID, 100)
+
+    // check restaurant info
+    //let restaurantInfo = await restaurant.getRestaurant(RestaurantMetaMaskID);
+    //console.log('Restaurant Info 0:', restaurantInfo);
+    let restaurantCount = await restaurant.getRestaurantCount(); 
+    console.log('resturantCount:', restaurantCount); 
+    //let restaurantBalance = await restaurant.getRestaurantBalance(RestaurantMetaMaskID);
+    //console.log('restaurantBalance:', restaurantBalance);
+
+    // check user balance
+    //let userBalance = await user.getUserBalance(userMetaMaskID);
+    //console.log('userBalance:', userBalance);
 }
 
 interact()

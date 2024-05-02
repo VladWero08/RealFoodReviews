@@ -9,6 +9,7 @@ contract MyERC20{
 
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) spendlimit;
+    
 
     string public name ="Token optional BC";               
     uint8 public decimals = 0;                
@@ -31,6 +32,11 @@ contract MyERC20{
     constructor(uint256 tokens) {
         nbTokens = tokens;
         balances[msg.sender] = tokens;
+    }
+
+    function deposit(uint256 tokens) public {
+        balances[msg.sender] += tokens;
+        nbTokens += tokens;
     }
 
     function totalSupply() public view returns (uint256) { 
@@ -59,11 +65,10 @@ contract MyERC20{
 								returns(uint) { 
         return spendlimit[tokenOwner][spender];
     }
-
+ 
     function transferFrom(address from, address to, uint tokens) 
             public  checkBalance (from, tokens) 
                     checkApproval(from, msg.sender, tokens) returns (bool) {
-        
         balances[from] = balances[from] - tokens;
         spendlimit[from][msg.sender] = spendlimit[from][msg.sender]- tokens;
         balances[to] = balances[to] + tokens;

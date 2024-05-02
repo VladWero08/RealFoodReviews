@@ -2,25 +2,54 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./MyERC20.sol";
 
-contract OrderContract {
-    address public tokenAddress; // Address of the ERC20 token contract
-    MyERC20 token; // Instance of the ERC20 token contract
 
-    event OrderPlaced(address indexed sender, address indexed recipient, uint256 amount);
+contract Order {
+    MyERC20 myERC20Contract; 
 
-    constructor(address _tokenAddress) {
-        tokenAddress = _tokenAddress;
-        token = MyERC20(_tokenAddress); // Initialize the ERC20 token instance
+    struct OrderData {
+        address from;
+        address to;
+        uint256 amount;
+        uint[] reviews;
     }
 
-    function placeOrder(address _recipient, uint256 _amount) external {
-        require(_recipient != address(0), "Invalid recipient address");
+    mapping (uint => OrderData) public orders;
+    mapping (address => uint[]) public userOrders;
+    uint public orderCount;
+
+    constructor(address _tokenAddress) {
+        myERC20Contract = MyERC20(_tokenAddress);
+    }
+
+    function placeOrder(address _to, uint256 _amount) external {
+        require(_to != address(0), "Invalid recipient address");
         require(_amount > 0, "Invalid order amount");
 
-        // Transfer tokens from the sender to the recipient
-        token.transferFrom(msg.sender, _recipient, _amount);
+        myERC20Contract.transfer(_to, _amount);
+        orders[orderCount] = OrderData(msg.sender, _to, _amount, new uint[](0));
+        userOrders[msg.sender].push(orderCount);
 
-        // Emit an event to log the order placement
-        emit OrderPlaced(msg.sender, _recipient, _amount);
+        orderCount++;        
+    }
+
+    function addReview(uint _orderId, uint _reviewId) external {
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+
+        orders[_orderId].reviews.push(_reviewId);
+    }
+
+    function getOrderById(uint _orderId) external view returns (address from, address to, uint256 amount) {
+        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
+
+        OrderData storage order = orders[_orderId];
+        return (order.from, order.to, order.amount);
+    }
+
+    function getOrderCount() external view returns (uint) {
+        return orderCount;
+    }
+
+    function list_all_orders_from_user(address _userID) external view returns (uint[] memory) {
+        return userOrders[_userID];
     }
 }
