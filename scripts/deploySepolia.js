@@ -22,8 +22,7 @@ async function deploy() {
     console.log("Review address: ", token3.address)
 
     let user = await ethers.getContractFactory("User");
-    let token4 = await user.connect(owner).deploy(
-        token.address, token3.address);
+    let token4 = await user.connect(owner).deploy()
     await token4.deployed();
     console.log("User address: ", token4.address)
 

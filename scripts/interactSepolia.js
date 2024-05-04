@@ -20,7 +20,7 @@ async function deploy() {
 
     async function getRestaurantDetails(restaurantToken, restaurantAddress) {
         let restaurantDetails = await restaurantToken.getRestaurant(restaurantAddress);
-        console.log("Restaurant MetaMask ID: ", restaurantDetails.metaMaskID);
+        console.log("\nRestaurant MetaMask ID: ", restaurantDetails.metaMaskID);
         console.log("Restaurant Name: ", restaurantDetails.name);
         console.log("Restaurant Description: ", restaurantDetails.description);
         console.log("Product Count: ", restaurantDetails.productCount);
@@ -31,7 +31,7 @@ async function deploy() {
 
     async function getOrderById(orderContract, orderId) {
         let orderCount = await orderContract.getOrderCount()
-        console.log('\norderCount ', orderCount)
+        console.log('\nOrderCount ', orderCount)
         
 
         let order = await orderContract.getOrderById(orderId);
@@ -39,21 +39,36 @@ async function deploy() {
         console.log("From:", order.from);
         console.log("To:", order.to);
         console.log("Amount:", order.amount);
-        console.log("Reviews:", order.reviews);
     }
 
-    async function list_all_orders_from_user(token, userAddress) {
-        let orders = await token.list_all_orders_from_user(userAddress)
-        console.log('User orders: ', orders)
+    async function getOrdersByUser(token, userAddress) {
+        let orders = await token.getOrdersByUser(userAddress);
+        
+        console.log('\nUser orders:');
+        for (let i = 0; i < orders.length; i++) {
+            let order = orders[i];
+            console.log('Order', i + 1);
+            console.log('From:', order.from);
+            console.log('To:', order.to);
+            console.log('Amount:', order.amount);
+            console.log('-----------------------------------');
+        }
     }
 
-    async function getReviewById(token, reviewId) {
-        let review = await token.getReviewById(reviewId)
-        console.log('Review Details')
-        console.log('description', review.description)
-        console.log('rating', review.rating)
+    async function getReviewsForRestaurant(token, restaurantAddress) {
+        let reviews = await token.getUserReviewsForRestaurant(restaurantAddress);
+        
+        console.log('Reviews for Restaurant:', restaurantAddress);
+        for (let i = 0; i < reviews.length; i++) {
+            let review = reviews[i];
+            console.log('Review', i + 1);
+            console.log('Review ID:', review.reviewID);
+            console.log('Description:', review.description);
+            console.log('Rating:', review.rating);
+            console.log('-----------------------------------');
+        }
     }
-
+    
     // get signers
     [user, restaurant] = await ethers.getSigners();
 
@@ -70,7 +85,7 @@ async function deploy() {
     let reviewToken = await ethers.getContractAt("Review", tokenAddress)
 
     
-    //create user and restaurant
+    // //create user and restaurant
     // let name = "restaurant 1"
     // let description = "restaurant 1 description"
     // await createUser(userToken, user, user.address)
@@ -85,24 +100,24 @@ async function deploy() {
     // let transfer = await myerc20Token.connect(user).transfer(restaurant.address, ethers.utils.parseUnits("1", 18))
     // await transfer.wait()
 
-    // place order
+    // //place order
     // let orderStatus = await myerc20Token.connect(user).placeOrder(restaurant.address, ethers.utils.parseUnits("2", 18))
     // await orderStatus.wait()
-    await getOrderById(myerc20Token, 1)
-    //await list_all_orders_from_user(myerc20Token, user.address)
+    // await getOrderById(myerc20Token, 1)
+    // await getOrdersByUser(myerc20Token, user.address)
     
-    // give review
-    // let review = await reviewToken.connect(user).addReview(1, "good food", 5)
-    // await review.wait()
-    // let reviewResponse = await reviewToken.connect(restaurant).addReview(1, "good response", 5)
-    // await reviewResponse.wait()
-    
-    await getReviewById(reviewToken, 4)
+    //give review
+    let review = await reviewToken.connect(user).addReview(restaurant.address, "good food", 4)
+    await review.wait()
+    let review2 = await reviewToken.connect(user).addReview(restaurant.address, "great food", 5)
+    await review2.wait()
+    await getReviewsForRestaurant(reviewToken, restaurant.address)
+
     let ownerEthBalance = await ethers.provider.getBalance(user.address)
-    console.log('user ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    console.log('\nuser ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
     let restaurantEthBalance = await ethers.provider.getBalance(restaurant.address)
     console.log('restaurant ETH balance ', ethers.utils.formatEther(restaurantEthBalance)) 
-    
+     
     let userBalance = await getBalance(myerc20Token, user.address)
     console.log("\nuser balance: ", userBalance)
     let restaurantBalance = await getBalance(myerc20Token, restaurant.address)

@@ -13,11 +13,12 @@ contract MyERC20{
         address from;
         address to;
         uint256 amount;
-        uint[] reviews;
     }
     mapping (uint => OrderData) public orders;
     mapping (address => uint[]) public userOrders;
     uint public orderCount;
+    mapping (address => mapping(address => bool)) public userRestaurantOrders;
+
 
     string public name ="Token optional BC";               
     uint8 public decimals = 0;                
@@ -91,30 +92,37 @@ contract MyERC20{
         
         orderCount++;
         transfer(_to, _amount);
-        orders[orderCount] = OrderData(msg.sender, _to, _amount, new uint[](0));
-        userOrders[msg.sender].push(orderCount);        
-    }
-
-    function addReview(uint _orderId, uint _reviewId) external {
-        require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
-
-        orders[_orderId].reviews.push(_reviewId);
+        orders[orderCount] = OrderData(msg.sender, _to, _amount);
+        userOrders[msg.sender].push(orderCount);  
+        userRestaurantOrders[msg.sender][_to] = true;      
     }
 
     function getOrderById(uint _orderId) external view returns (
-        address from, address to, uint256 amount, uint[] memory reviews) {
+        address from, address to, uint256 amount) {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
 
         OrderData storage order = orders[_orderId];
-        return (order.from, order.to, order.amount, order.reviews);
+        return (order.from, order.to, order.amount);
     }
 
     function getOrderCount() external view returns (uint) {
         return orderCount;
     }
 
-    function list_all_orders_from_user(address _userID) external view returns (uint[] memory) {
-        return userOrders[_userID];
+    function getOrdersByUser(address _userAddress) external view returns (OrderData[] memory) {
+        uint[] memory orderIndexes = userOrders[_userAddress];
+        OrderData[] memory userOrderData = new OrderData[](orderIndexes.length);
+
+        for (uint i = 0; i < orderIndexes.length; i++) {
+            OrderData storage order = orders[orderIndexes[i]];
+            userOrderData[i] = order;
+        }
+
+        return userOrderData;
+    }
+
+    function hasOrderedFromRestaurant(address _userAddress, address _restaurantAddress) external view returns (bool) {
+        return userRestaurantOrders[_userAddress][_restaurantAddress];
     }
 
 }

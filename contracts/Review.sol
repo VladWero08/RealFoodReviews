@@ -13,16 +13,15 @@ contract Review {
 
     MyERC20 public myERC20Contract;
     uint public reviewCount;
-    mapping(uint => ReviewStruct) public reviews;
+    mapping (address => ReviewStruct[]) public restaurantReviews;
 
-    
+
     constructor(address _myERC20Address) {
         myERC20Contract = MyERC20(_myERC20Address);
     }
 
-    modifier onlyOrderParticipant(uint orderID) {
-        (address orderSender, address orderRecipient, uint256 ammount, uint[] memory orderReviews) = myERC20Contract.getOrderById(orderID);
-        require(msg.sender == orderSender || msg.sender == orderRecipient, "Only participants of the order can call this function");
+    modifier onlyOrderParticipant(address user, address restaurant) {
+        require(myERC20Contract.hasOrderedFromRestaurant(user, restaurant) == true, "Only participants of the order can call this function");
         _;
     }
 
@@ -30,30 +29,21 @@ contract Review {
         require(rating >= 1 && rating <= 5, "Rating must be between 1 and 5");
         _;
     }
-    
-    modifier orderExists(uint orderID) {
-        require(orderID < myERC20Contract.getOrderCount(), "Order does not exist");
-        _;
-    }
 
-    function addReview(uint _orderID, string memory _description, uint _rating) public onlyOrderParticipant(_orderID) validReviewRating(_rating) orderExists(_orderID) {
+    function addReview(address _restaurantAddress, string memory _description, uint _rating) 
+        public onlyOrderParticipant(msg.sender, _restaurantAddress) validReviewRating(_rating) {
         reviewCount++;
         
-        reviews[reviewCount] = ReviewStruct(
+        restaurantReviews[_restaurantAddress].push(ReviewStruct(
             reviewCount,
             _description,
             _rating
-        );
+        ));
 
-        // Add review to order
-        myERC20Contract.addReview(_orderID, reviewCount);
     }
 
-    function getReviewById(uint _reviewID) external view returns (string memory description, uint rating) {
-        require(_reviewID < reviewCount, "Review does not exist");
-
-        ReviewStruct storage review = reviews[_reviewID];
-        return (review.description, review.rating);
+    function getUserReviewsForRestaurant(address _restaurantAddress) external view returns (ReviewStruct[] memory) {
+        return restaurantReviews[_restaurantAddress];
     }
 
 }
