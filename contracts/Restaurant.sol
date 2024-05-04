@@ -73,17 +73,17 @@ contract Restaurant {
     }
 
     function createRestaurant(address _metaMaskID, string memory _name, string memory _description) external {
-        restaurants[_metaMaskID] = RestaurantStruct(_metaMaskID, _name, _description, 0);
         restaurantCount++;
+        restaurants[_metaMaskID] = RestaurantStruct(_metaMaskID, _name, _description, 0);
         
         emit RestaurantAdded(restaurantCount, _metaMaskID, _name, _description);
     }
     
     function addProduct(address _restaurantID, uint _price, string memory _description, string memory _gramaj) external {
+        restaurants[_restaurantID].productCount++;
         uint productID = restaurants[_restaurantID].productCount;
         restaurantProducts[_restaurantID][productID] = Product(productID, _price, _description, _gramaj);
-        restaurants[_restaurantID].productCount++;
-
+        
         emit ProductAdded(_restaurantID, productID, _price, _description, _gramaj);
     }
 }

@@ -88,12 +88,11 @@ contract MyERC20{
     function placeOrder(address _to, uint256 _amount) external {
         require(_to != address(0), "Invalid recipient address");
         require(_amount > 0, "Invalid order amount");
-
+        
+        orderCount++;
         transfer(_to, _amount);
         orders[orderCount] = OrderData(msg.sender, _to, _amount, new uint[](0));
-        userOrders[msg.sender].push(orderCount);
-
-        orderCount++;        
+        userOrders[msg.sender].push(orderCount);        
     }
 
     function addReview(uint _orderId, uint _reviewId) external {

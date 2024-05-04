@@ -15,12 +15,13 @@ contract Review {
     uint public reviewCount;
     mapping(uint => ReviewStruct) public reviews;
 
+    
     constructor(address _myERC20Address) {
         myERC20Contract = MyERC20(_myERC20Address);
     }
 
     modifier onlyOrderParticipant(uint orderID) {
-        (address orderSender, address orderRecipient, uint256 ammount) = myERC20Contract.getOrderById(orderID);
+        (address orderSender, address orderRecipient, uint256 ammount, uint[] memory orderReviews) = myERC20Contract.getOrderById(orderID);
         require(msg.sender == orderSender || msg.sender == orderRecipient, "Only participants of the order can call this function");
         _;
     }
@@ -36,6 +37,8 @@ contract Review {
     }
 
     function addReview(uint _orderID, string memory _description, uint _rating) public onlyOrderParticipant(_orderID) validReviewRating(_rating) orderExists(_orderID) {
+        reviewCount++;
+        
         reviews[reviewCount] = ReviewStruct(
             reviewCount,
             _description,
@@ -44,8 +47,13 @@ contract Review {
 
         // Add review to order
         myERC20Contract.addReview(_orderID, reviewCount);
-        
-        reviewCount++;
+    }
+
+    function getReviewById(uint _reviewID) external view returns (string memory description, uint rating) {
+        require(_reviewID < reviewCount, "Review does not exist");
+
+        ReviewStruct storage review = reviews[_reviewID];
+        return (review.description, review.rating);
     }
 
 }

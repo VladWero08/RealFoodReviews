@@ -39,6 +39,7 @@ async function deploy() {
         console.log("From:", order.from);
         console.log("To:", order.to);
         console.log("Amount:", order.amount);
+        console.log("Reviews:", order.reviews);
     }
 
     async function list_all_orders_from_user(token, userAddress) {
@@ -46,6 +47,12 @@ async function deploy() {
         console.log('User orders: ', orders)
     }
 
+    async function getReviewById(token, reviewId) {
+        let review = await token.getReviewById(reviewId)
+        console.log('Review Details')
+        console.log('description', review.description)
+        console.log('rating', review.rating)
+    }
 
     // get signers
     [user, restaurant] = await ethers.getSigners();
@@ -64,8 +71,8 @@ async function deploy() {
 
     
     //create user and restaurant
-    let name = "restaurant 2"
-    let description = "restaurant 2 description"
+    // let name = "restaurant 1"
+    // let description = "restaurant 1 description"
     // await createUser(userToken, user, user.address)
     // await createRestaurant(restaurantToken, restaurant.address, user, name, description)
     // await getRestaurantDetails(restaurantToken, restaurant.address);
@@ -79,40 +86,27 @@ async function deploy() {
     // await transfer.wait()
 
     // place order
-    // let orderStatus = await myerc20Token.connect(user).placeOrder(restaurant.address, ethers.utils.parseUnits("1", 18))
+    // let orderStatus = await myerc20Token.connect(user).placeOrder(restaurant.address, ethers.utils.parseUnits("2", 18))
     // await orderStatus.wait()
-    //await getOrderById(myerc20Token, 2)
-    await list_all_orders_from_user(myerc20Token, user.address)
-    //await myerc20Token.getOrderById(orderCount - 1);
-    // let estimatedGas = await myerc20Token.connect(user).estimateGas.placeOrder(restaurant.address, ethers.utils.parseUnits("1", 1), { gasLimit: 500000000 });
-    // console.log(estimatedGas)
-    // let gasPrice = await ethers.provider.getGasPrice()
-    // console.log('gasPrice ', gasPrice)
-    // let costInWei = estimatedGas.mul(gasPrice)
-    // console.log('gasPrice in ETH ', ethers.utils.formatEther(costInWei)) // prince in ETH
-
+    await getOrderById(myerc20Token, 1)
+    //await list_all_orders_from_user(myerc20Token, user.address)
+    
     // give review
-    let review = await reviewToken.connect(user).addReview(1, "good food", 5)
-    await review.wait()
-
-
+    // let review = await reviewToken.connect(user).addReview(1, "good food", 5)
+    // await review.wait()
+    // let reviewResponse = await reviewToken.connect(restaurant).addReview(1, "good response", 5)
+    // await reviewResponse.wait()
+    
+    await getReviewById(reviewToken, 4)
     let ownerEthBalance = await ethers.provider.getBalance(user.address)
     console.log('user ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
     let restaurantEthBalance = await ethers.provider.getBalance(restaurant.address)
     console.log('restaurant ETH balance ', ethers.utils.formatEther(restaurantEthBalance)) 
     
-    // if(ownerEthBalance.gte(costInWei)) {
-    //     let transferTx = await myerc20Token.connect(user).placeOrder(restaurant.address, ethers.utils.parseUnits("1", 4))
-    //     await transferTx.wait()
-    // } else {
-    //     console.log("Not enough ETH balance")
-    // }
-    // get balance
     let userBalance = await getBalance(myerc20Token, user.address)
     console.log("\nuser balance: ", userBalance)
     let restaurantBalance = await getBalance(myerc20Token, restaurant.address)
     console.log("restaurant balance: ", restaurantBalance)
-
 }
 
 deploy()

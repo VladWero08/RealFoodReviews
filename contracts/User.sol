@@ -33,9 +33,9 @@ contract User {
 
     function createUser(address _metaMaskID) external {
         require(!userExists(_metaMaskID), "User already exists");
-        users[_metaMaskID] = UserStruct(_metaMaskID);
         userCount++;
-
+        users[_metaMaskID] = UserStruct(_metaMaskID);
+        
         emit UserAdded(userCount -1, _metaMaskID);
     }
 }
