@@ -12,7 +12,7 @@ module.exports = {
     },
     sepolia: {
       url: "https://ethereum-sepolia-rpc.publicnode.com",
-      accounts: ["3d37a49d751c40039190398c680177f52eb19e5b56ab6683daa02625a3d462ab",  "df7e2e435a9f79f5e55045b4f30e3a7ad1ce2b4a0145c1e9733f0cef97e01cb1"]
+      accounts: ["0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",  "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d"]
     }
   },
   defaultNetwork: "hardhat",

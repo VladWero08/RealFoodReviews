@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
-import "./Order.sol";
+import "./MyERC20.sol";
 
 contract Review {
     
@@ -11,17 +11,16 @@ contract Review {
         uint rating;
     }
 
-    Order public orderContract;
+    MyERC20 public myERC20Contract;
     uint public reviewCount;
     mapping(uint => ReviewStruct) public reviews;
 
-    constructor(address _orderAddress) {
-        orderContract = Order(_orderAddress);
+    constructor(address _myERC20Address) {
+        myERC20Contract = MyERC20(_myERC20Address);
     }
 
-
     modifier onlyOrderParticipant(uint orderID) {
-        (address orderSender, address orderRecipient, uint256 ammount) = orderContract.getOrderById(orderID);
+        (address orderSender, address orderRecipient, uint256 ammount) = myERC20Contract.getOrderById(orderID);
         require(msg.sender == orderSender || msg.sender == orderRecipient, "Only participants of the order can call this function");
         _;
     }
@@ -32,7 +31,7 @@ contract Review {
     }
     
     modifier orderExists(uint orderID) {
-        require(orderID < orderContract.getOrderCount(), "Order does not exist");
+        require(orderID < myERC20Contract.getOrderCount(), "Order does not exist");
         _;
     }
 
@@ -44,7 +43,7 @@ contract Review {
         );
 
         // Add review to order
-        orderContract.addReview(_orderID, reviewCount);
+        myERC20Contract.addReview(_orderID, reviewCount);
         
         reviewCount++;
     }

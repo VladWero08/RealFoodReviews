@@ -2,7 +2,6 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "./MyERC20.sol";
-import "./Order.sol";
 import "./Review.sol";
 
 contract User {
@@ -12,7 +11,6 @@ contract User {
     }
 
     MyERC20 public myERC20Contract;
-    Order public orderContract;
     Review public reviewContract;
 
     mapping(address => UserStruct) public users;
@@ -24,9 +22,8 @@ contract User {
     event ReviewAdded(uint _orderID, uint reviewID, uint _rating);
 
 
-    constructor(address _myERC20Address, address _orderAddress, address _reviewAddress) {
+    constructor(address _myERC20Address, address _reviewAddress) {
         myERC20Contract = MyERC20(_myERC20Address);
-        orderContract = Order(_orderAddress);
         reviewContract = Review(_reviewAddress);
     }
 
