@@ -19,11 +19,16 @@ contract Restaurant {
     mapping(address => RestaurantStruct) public restaurants;
     mapping(address => mapping(uint => Product)) public restaurantProducts; 
     
+
     uint public restaurantCount;
 
     event RestaurantAdded(uint indexed restaurantID, address metaMaskID, string name, string description);
     event ProductAdded(address indexed restaurantID, uint indexed productID, uint price, string description, string gramaj);
     event BalanceUpdated(address indexed restaurantID, uint newBalance);
+
+    function restaurantExists(address _restaurantAddress) public view returns (bool) {
+        return restaurants[_restaurantAddress].metaMaskID != address(0);
+    }
 
     function getRestaurant(address _restaurantID) external view returns (
         address metaMaskID,

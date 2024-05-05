@@ -70,27 +70,29 @@ async function deploy() {
     }
     
     // get signers
-    [user, restaurant] = await ethers.getSigners();
+    [user, restaurant, user2] = await ethers.getSigners();
 
-    let tokenAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    let tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
     let myerc20Token = await ethers.getContractAt("MyERC20", tokenAddress)
     
-    tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    tokenAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
     let restaurantToken = await ethers.getContractAt("Restaurant", tokenAddress)
 
-    tokenAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+    tokenAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
     let userToken = await ethers.getContractAt("User", tokenAddress)
 
-    tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+    tokenAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
     let reviewToken = await ethers.getContractAt("Review", tokenAddress)
 
-    
-    // //create user and restaurant
+    tokenAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+    let ethToken = await ethers.getContractAt("EthTransfer", tokenAddress)
+
+    //create user and restaurant
     // let name = "restaurant 1"
     // let description = "restaurant 1 description"
     // await createUser(userToken, user, user.address)
     // await createRestaurant(restaurantToken, restaurant.address, user, name, description)
-    // await getRestaurantDetails(restaurantToken, restaurant.address);
+    //await getRestaurantDetails(restaurantToken, restaurant.address);
 
     // //deposit into user balance
     // let deposit = await myerc20Token.connect(user).deposit(ethers.utils.parseUnits("10", 18))
@@ -106,22 +108,46 @@ async function deploy() {
     // await getOrderById(myerc20Token, 1)
     // await getOrdersByUser(myerc20Token, user.address)
     
-    //give review
-    let review = await reviewToken.connect(user).addReview(restaurant.address, "good food", 4)
-    await review.wait()
-    let review2 = await reviewToken.connect(user).addReview(restaurant.address, "great food", 5)
-    await review2.wait()
-    await getReviewsForRestaurant(reviewToken, restaurant.address)
+    // //give review
+    // let review = await reviewToken.connect(user).addReview(restaurant.address, "good food", 4)
+    // await review.wait()
+    // let review2 = await reviewToken.connect(user).addReview(restaurant.address, "great food", 5)
+    // await review2.wait()
+    // await getReviewsForRestaurant(reviewToken, restaurant.address)
 
     let ownerEthBalance = await ethers.provider.getBalance(user.address)
+    console.log('\nBEFORE user ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    let contractBalance = await ethers.provider.getBalance(restaurant.address)
+    console.log('BEFORE restaurant ETH balance ', ethers.utils.formatEther(contractBalance))
+    contractBalance = await ethers.provider.getBalance(ethToken.address)
+    console.log('BEFORE ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
+    contractBalance = await ethers.provider.getBalance(ethToken.address)
+    console.log('BEFORE MyERC20 contract ETH balance ', ethers.utils.formatEther(contractBalance))
+    
+
+    // eth transfer
+    let amount = ethers.utils.parseEther("10")
+    let transfer = await ethToken.connect(restaurant).transferEther(ethToken.address, amount, {value : amount})
+    await transfer.wait()
+    
+    // let amount = ethers.utils.parseUnits("0")
+    // let transfer = await ethToken.transferEther(restaurant.address, amount)
+    // await transfer.wait()
+    console.log('-------------------------------------------')
+    ownerEthBalance = await ethers.provider.getBalance(user.address)
     console.log('\nuser ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
-    let restaurantEthBalance = await ethers.provider.getBalance(restaurant.address)
-    console.log('restaurant ETH balance ', ethers.utils.formatEther(restaurantEthBalance)) 
-     
-    let userBalance = await getBalance(myerc20Token, user.address)
-    console.log("\nuser balance: ", userBalance)
-    let restaurantBalance = await getBalance(myerc20Token, restaurant.address)
-    console.log("restaurant balance: ", restaurantBalance)
+    ownerEthBalance = await ethers.provider.getBalance(restaurant.address)
+    console.log('restaurant ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    contractBalance = await ethers.provider.getBalance(ethToken.address)
+    console.log('ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
+    contractBalance = await ethers.provider.getBalance(myerc20Token.address)
+    console.log('MyERC20 contract ETH balance ', ethers.utils.formatEther(contractBalance))
+    
+
+    // let userBalance = await getBalance(myerc20Token, user.address)
+    // console.log("\nuser balance: ", userBalance)
+    // let restaurantBalance = await getBalance(myerc20Token, restaurant.address)
+    // console.log("restaurant balance: ", restaurantBalance)
 }
 
 deploy()

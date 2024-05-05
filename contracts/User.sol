@@ -14,8 +14,8 @@ contract User {
     event OrderPlaced(address indexed from, address indexed to, uint256 amount);
     event ReviewAdded(uint _orderID, uint reviewID, uint _rating);
 
-    function userExists(address _metaMaskID) internal view returns (bool) {
-        return users[_metaMaskID].metaMaskID != address(0);
+    function userExists(address _userAddress) public view returns (bool) {
+        return users[_userAddress].metaMaskID != address(0);
     }
 
     function createUser(address _metaMaskID) external {

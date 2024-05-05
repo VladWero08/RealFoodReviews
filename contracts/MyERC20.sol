@@ -2,12 +2,17 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+import "./Restaurant.sol";
+import "./User.sol";
 
 contract MyERC20{
 
     uint256 nbTokens;   
     mapping(address => uint256) balances;
     mapping(address => mapping (address => uint256)) spendlimit;
+
+    User userToken;
+    Restaurant restaurantToken;
 
     struct OrderData {
         address from;
@@ -16,6 +21,7 @@ contract MyERC20{
     }
     mapping (uint => OrderData) public orders;
     mapping (address => uint[]) public userOrders;
+    
     uint public orderCount;
     mapping (address => mapping(address => bool)) public userRestaurantOrders;
 
@@ -38,9 +44,9 @@ contract MyERC20{
         _;
     }
 
-    constructor(uint256 tokens) {
-        nbTokens = tokens;
-        balances[msg.sender] = tokens;
+    constructor(address _userContract, address _restaurantContract) {
+        userToken = User(_userContract);
+        restaurantToken = Restaurant(_restaurantContract);
     }
 
     function deposit(uint256 tokens) public {
@@ -87,7 +93,8 @@ contract MyERC20{
 
     // order contract methods
     function placeOrder(address _to, uint256 _amount) external {
-        require(_to != address(0), "Invalid recipient address");
+        require(userToken.userExists(_to) || restaurantToken.restaurantExists(_to), 
+        "Invalid recipient address");
         require(_amount > 0, "Invalid order amount");
         
         orderCount++;
@@ -123,6 +130,5 @@ contract MyERC20{
 
     function hasOrderedFromRestaurant(address _userAddress, address _restaurantAddress) external view returns (bool) {
         return userRestaurantOrders[_userAddress][_restaurantAddress];
-    }
-
+    } 
 }
