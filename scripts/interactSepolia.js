@@ -19,16 +19,45 @@ async function deploy() {
     }
 
     async function getRestaurantDetails(restaurantToken, restaurantAddress) {
-        let restaurantDetails = await restaurantToken.getRestaurant(restaurantAddress);
-        console.log("\nRestaurant MetaMask ID: ", restaurantDetails.metaMaskID);
-        console.log("Restaurant Name: ", restaurantDetails.name);
-        console.log("Restaurant Description: ", restaurantDetails.description);
-        console.log("Product Count: ", restaurantDetails.productCount);
-
+        let [
+            metaMaskID,
+            name,
+            description,
+            productCount,
+            products
+        ] = await restaurantToken.getRestaurant(restaurantAddress);
+        
+        console.log("\nRestaurant MetaMask ID: ", metaMaskID);
+        console.log("Restaurant Name: ", name);
+        console.log("Restaurant Description: ", description);
+        console.log("Product Count: ", productCount);
+    
+        console.log("\nProducts:");
+        for (let i = 0; i < products.length; i++) {
+            console.log("Product ID: ", products[i].productID);
+            console.log("Price: ", products[i].price);
+            console.log("Description: ", products[i].description);
+            console.log("Gramaj: ", products[i].gramaj);
+        }
+        
+        console.log("-----------------------------------")
+    }
+    
+    async function getAllRestaurants(restaurantToken) {
+        let [
+            restaurantNames,
+            restaurantDescriptions
+        ] = await restaurantToken.getAllRestaurants();
+    
+        console.log("\nAll Restaurants:");
+        for (let i = 0; i < restaurantNames.length; i++) {
+            console.log("Restaurant Name: ", restaurantNames[i]);
+            console.log("Restaurant Description: ", restaurantDescriptions[i]);
+        }
         let restaurantCount = await restaurantToken.getRestaurantCount();
         console.log("Restaurant Count: ", restaurantCount);
     }
-
+    
     async function getOrderById(orderContract, orderId) {
         let orderCount = await orderContract.getOrderCount()
         console.log('\nOrderCount ', orderCount)
@@ -68,9 +97,17 @@ async function deploy() {
             console.log('-----------------------------------');
         }
     }
+
+    async function addProduct(restaurantToken, restaurantAddress, price, description, gramaj) {
+        // Call the addProduct function in the contract
+        await restaurantToken.addProduct(restaurantAddress, price, description, gramaj);
+    
+        console.log("Product added successfully!");
+    }
+    
     
     // get signers
-    [user, restaurant, user2] = await ethers.getSigners();
+    [user, restaurant, restaurant2] = await ethers.getSigners();
 
     let tokenAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
     let myerc20Token = await ethers.getContractAt("MyERC20", tokenAddress)
@@ -92,7 +129,15 @@ async function deploy() {
     // let description = "restaurant 1 description"
     // await createUser(userToken, user, user.address)
     // await createRestaurant(restaurantToken, restaurant.address, user, name, description)
-    //await getRestaurantDetails(restaurantToken, restaurant.address);
+    await addProduct(restaurantToken, restaurant.address, ethers.utils.parseUnits("1"), "product 3", "300g")
+    await getRestaurantDetails(restaurantToken, restaurant.address);
+    
+    // name = "restaurant 2"
+    // description = "restaurant 2 description"
+    // await createRestaurant(restaurantToken, restaurant2.address, user, name, description)
+    //await getRestaurantDetails(restaurantToken, restaurant2.address);
+    await getAllRestaurants(restaurantToken)
+
 
     // //deposit into user balance
     // let deposit = await myerc20Token.connect(user).deposit(ethers.utils.parseUnits("10", 18))
@@ -102,7 +147,7 @@ async function deploy() {
     // let transfer = await myerc20Token.connect(user).transfer(restaurant.address, ethers.utils.parseUnits("1", 18))
     // await transfer.wait()
 
-    // //place order
+    //place order
     // let orderStatus = await myerc20Token.connect(user).placeOrder(restaurant.address, ethers.utils.parseUnits("2", 18))
     // await orderStatus.wait()
     // await getOrderById(myerc20Token, 1)
@@ -115,39 +160,33 @@ async function deploy() {
     // await review2.wait()
     // await getReviewsForRestaurant(reviewToken, restaurant.address)
 
-    let ownerEthBalance = await ethers.provider.getBalance(user.address)
-    console.log('\nBEFORE user ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
-    let contractBalance = await ethers.provider.getBalance(restaurant.address)
-    console.log('BEFORE restaurant ETH balance ', ethers.utils.formatEther(contractBalance))
-    contractBalance = await ethers.provider.getBalance(ethToken.address)
-    console.log('BEFORE ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
-    contractBalance = await ethers.provider.getBalance(ethToken.address)
-    console.log('BEFORE MyERC20 contract ETH balance ', ethers.utils.formatEther(contractBalance))
-    
+    // let ownerEthBalance = await ethers.provider.getBalance(user.address)
+    // console.log('\nBEFORE user ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    // let contractBalance = await ethers.provider.getBalance(restaurant.address)
+    // console.log('BEFORE restaurant ETH balance ', ethers.utils.formatEther(contractBalance))
+    // contractBalance = await ethers.provider.getBalance(ethToken.address)
+    // console.log('BEFORE ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
 
-    // eth transfer
-    let amount = ethers.utils.parseEther("10")
-    let transfer = await ethToken.connect(restaurant).transferEther(ethToken.address, amount, {value : amount})
-    await transfer.wait()
+    // // eth transfer
+    // let amount = ethers.utils.parseEther("10")
+    // let transfer = await ethToken.connect(restaurant).transferEther(ethToken.address, amount, {value : amount})
+    // await transfer.wait()
     
     // let amount = ethers.utils.parseUnits("0")
     // let transfer = await ethToken.transferEther(restaurant.address, amount)
     // await transfer.wait()
-    console.log('-------------------------------------------')
-    ownerEthBalance = await ethers.provider.getBalance(user.address)
-    console.log('\nuser ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
-    ownerEthBalance = await ethers.provider.getBalance(restaurant.address)
-    console.log('restaurant ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
-    contractBalance = await ethers.provider.getBalance(ethToken.address)
-    console.log('ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
-    contractBalance = await ethers.provider.getBalance(myerc20Token.address)
-    console.log('MyERC20 contract ETH balance ', ethers.utils.formatEther(contractBalance))
-    
+    // console.log('-------------------------------------------')
+    // ownerEthBalance = await ethers.provider.getBalance(user.address)
+    // console.log('\nuser ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    // ownerEthBalance = await ethers.provider.getBalance(restaurant.address)
+    // console.log('restaurant ETH balance ', ethers.utils.formatEther(ownerEthBalance)) 
+    // contractBalance = await ethers.provider.getBalance(ethToken.address)
+    // console.log('ETH contract ETH balance ', ethers.utils.formatEther(contractBalance))
 
-    // let userBalance = await getBalance(myerc20Token, user.address)
-    // console.log("\nuser balance: ", userBalance)
-    // let restaurantBalance = await getBalance(myerc20Token, restaurant.address)
-    // console.log("restaurant balance: ", restaurantBalance)
+    let userBalance = await getBalance(myerc20Token, user.address)
+    console.log("\nuser balance: ", userBalance)
+    let restaurantBalance = await getBalance(myerc20Token, restaurant.address)
+    console.log("restaurant balance: ", restaurantBalance)
 }
 
 deploy()
