@@ -18,6 +18,7 @@ contract MyERC20{
         address from;
         address to;
         uint256 amount;
+        uint[] products;
     }
     mapping (uint => OrderData) public orders;
     mapping (address => uint[]) public userOrders;
@@ -92,28 +93,50 @@ contract MyERC20{
     }
 
     // order contract methods
-    function placeOrder(address _to, uint256 _amount) external {
+    function placeOrder(address _to, uint[] memory products) external {
         require(userToken.userExists(_to) || restaurantToken.restaurantExists(_to), 
         "Invalid recipient address");
-        require(_amount > 0, "Invalid order amount");
+        uint amount = restaurantToken.sumProducts(_to, products);
+        require(amount > 0, "Invalid order amount");
         
         orderCount++;
-        transfer(_to, _amount);
-        orders[orderCount] = OrderData(msg.sender, _to, _amount);
+        transfer(_to, amount);
+        orders[orderCount] = OrderData(msg.sender, _to, amount, products);
         userOrders[msg.sender].push(orderCount);  
         userRestaurantOrders[msg.sender][_to] = true;      
     }
 
+    function getOrderCount() external view returns (uint) {
+        return orderCount;
+    }
+
     function getOrderById(uint _orderId) external view returns (
-        address from, address to, uint256 amount) {
+        address from, 
+        address to, 
+        uint256 amount, 
+        uint[] memory productIDs, 
+        uint[] memory prices, 
+        string[] memory descriptions, 
+        string[] memory gramajs) {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
 
         OrderData storage order = orders[_orderId];
-        return (order.from, order.to, order.amount);
-    }
+        uint[] memory _productIDs = new uint[](order.products.length);
+        uint[] memory _prices = new uint[](order.products.length);
+        string[] memory _descriptions = new string[](order.products.length);
+        string[] memory _gramajs = new string[](order.products.length);
 
-    function getOrderCount() external view returns (uint) {
-        return orderCount;
+        for (uint i = 0; i < order.products.length; i++) {
+            (uint productID, uint price, string memory description, string memory gramaj) =
+                restaurantToken.getProduct(order.to, order.products[i]);
+
+            _productIDs[i] = productID;
+            _prices[i] = price;
+            _descriptions[i] = description;
+            _gramajs[i] = gramaj;
+        }
+
+        return (order.from, order.to, order.amount, _productIDs, _prices, _descriptions, _gramajs);        
     }
 
     function getOrdersByUser(address _userAddress) external view returns (OrderData[] memory) {

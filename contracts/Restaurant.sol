@@ -70,8 +70,8 @@ contract Restaurant {
         restaurantNames = new string[](restaurantCount);
         restaurantDescriptions = new string[](restaurantCount);
         
-        for (uint i = 1; i <= restaurantCount; i++) {
-            address restaurantAddress = restaurantsByIndex[i];
+        for (uint i = 0; i < restaurantCount; i++) {
+            address restaurantAddress = restaurantsByIndex[i + 1];
             restaurantNames[i] = restaurants[restaurantAddress].name;
             restaurantDescriptions[i] = restaurants[restaurantAddress].description;
         }
@@ -105,5 +105,15 @@ contract Restaurant {
             product.description,
             product.gramaj
         );
+    }
+
+    function sumProducts(address _restaurantAddress, uint[] memory _productIndexes) external view returns (uint) {
+        uint sum = 0;
+        for (uint i = 0; i < _productIndexes.length; i++) {
+            uint productId = _productIndexes[i];
+            require(productId > 0 && productId <= restaurants[_restaurantAddress].productCount, "Invalid product index");
+            sum += restaurantProducts[_restaurantAddress][productId].price;
+        }
+        return sum;
     }
 }
