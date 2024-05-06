@@ -1,0 +1,56 @@
+body {
+    font-family: "Unbounded", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    border: 0;
+    margin: 0;
+
+    background-color:hsla(0,0%,100%,1);
+    background-image:
+        radial-gradient(at 22% 2%, hsla(0,0%,100%,0.7) 0px, transparent 50%),
+        radial-gradient(at 74% 11%, hsla(0,0%,100%,0.73) 0px, transparent 50%),
+        radial-gradient(at 58% 93%, hsla(83,43%,77%,0.59) 0px, transparent 50%),
+        radial-gradient(at 98% 76%, hsla(273,32%,65%,0.45) 0px, transparent 50%),
+        radial-gradient(at 0% 78%, hsla(183,22%,56%,0.62) 0px, transparent 50%);
+
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+}
+
+$dark: #222831;
+$dark-light: #31363F;
+$gray: #FBF6EE;
+$white: #EEEEEE;
+
+$blue-highlight: #76ABAE;
+$blue-darker-highlight: #4c7072;
+$purple-highlight: #AD88C6;
+$green-highlight: #BFEA7C;
+
+$padding: 8px;
+$xs-padding: $padding;
+$s-padding: $padding * 2;
+$m-padding: $padding * 4;
+$l-padding: $padding * 8;
+$xl-padding: $padding * 12;
+
+.btn {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 8px;
+}

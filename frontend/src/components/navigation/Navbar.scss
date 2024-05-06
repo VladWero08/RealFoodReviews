@@ -1,0 +1,78 @@
+@import "../../css/style.scss";
+
+.navbar__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: $m-padding;
+}
+
+// NAVBAR LOGO
+.navbar__logo {
+    flex: 3;
+}
+
+#navbar__logo-img {
+    width: 150px;
+
+}
+
+// NAVBAR LINKS
+.navbar__links {
+    flex: 3;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar__link {
+    color: $dark;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.navbar__link a {
+    color: black;
+    text-decoration: none;
+}
+
+// NAVBAR BUTTONS
+.navbar__buttons {
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.navbar__btn {
+    padding: $s-padding;
+
+    font-size: 16px;
+    font-weight: 500;   
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+}
+.navbar__btn:hover { transition: 0.4s ease-in-out; cursor: pointer;}
+
+/* Sign-Up button */
+.btn-sign-up {
+    background: $blue-highlight;
+    color: white;
+    margin-right: $s-padding;
+}
+.btn-sign-up a { color: white; text-decoration: none; }
+.btn-sign-up:hover { background: $blue-darker-highlight; }
+
+/* Sign-In button */
+.btn-sign-in {
+    background: transparent;
+    color: $blue-highlight;
+    border: 2px solid $blue-highlight;
+}
+.btn-sign-in a { color: $blue-highlight;; text-decoration: none; }
+.btn-sign-in:hover {
+    color: $blue-darker-highlight;
+    border: 2px solid $blue-darker-highlight;
+}
