@@ -1,71 +1,63 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { ethers } = require("hardhat");
+const { expect } = require("chai");
 
 describe("Restaurant Contract", function () {
   let Restaurant;
   let restaurant;
 
   beforeEach(async function () {
-    [owner] = await ethers.getSigners();
+    [owner, restaurant] = await ethers.getSigners();
     Restaurant = await ethers.getContractFactory("Restaurant");
     restaurant = await Restaurant.deploy();
     await restaurant.deployed();
   });
 
-  it("Should create a restaurant", async function () {
-        const metaMaskID = owner.address;
-        const name = "Restaurant A";
-        const description = "A nice place to eat";
-        
-        await restaurant.createRestaurant(metaMaskID, name, description);
-        const restaurantInfo = await restaurant.getRestaurant(metaMaskID);
+  it("Should add a product to the newly created restaurant", async function () {
+    const metaMaskID = owner.address;
+    const name = "Restaurant A";
+    const description = "A nice place to eat";
     
-        expect(restaurantInfo.name).to.equal(name);
-        expect(restaurantInfo.description).to.equal(description);
-        expect(restaurantInfo.productCount).to.equal(0); // Assuming product count starts at 0
-       });
+    let newRestaurant = await restaurant.createRestaurant(metaMaskID, name, description);
+    await newRestaurant.wait();
+    let newProduct = await restaurant.addProduct(metaMaskID, ethers.utils.parseUnits("2"), "product 1", "100g");
+    await newProduct.wait();
+
+    let [
+        _metaMaskID,
+        _name,
+        _description,
+        _productCount,
+        _products
+    ] = await restaurant.getRestaurant(metaMaskID);
+    
+    
+    expect(_metaMaskID).to.equal(metaMaskID);
+    expect(_name).to.equal(name);
+    expect(_description).to.equal(description);
+    
+    expect(_products[0].price.toString()).to.equal(ethers.utils.parseUnits("2").toString());
+    expect(_products[0].description).to.equal("product 1");
+    expect(_products[0].gramaj).to.equal("100g");
+  });
+
+  it("Should retrieve all restaurants and their descriptions", async function () {
+    const metaMaskID1 = owner.address;
+    const metaMaskID2 = restaurant.address;
+    
+    let newRestaurant = await restaurant.createRestaurant(metaMaskID1, "Restaurant A", "Description A");
+    await newRestaurant.wait();
+    newRestaurant = await restaurant.createRestaurant(metaMaskID2, "Restaurant B", "Description B");
+    await newRestaurant.wait();
+
+    let [
+        restaurantNames,
+        restaurantDescriptions
+    ] = await restaurant.getAllRestaurants();
+
+    expect(restaurantNames[0]).to.equal("Restaurant A");
+    expect(restaurantNames[1]).to.equal("Restaurant B");
+    expect(restaurantDescriptions[0]).to.equal("Description A");
+    expect(restaurantDescriptions[1]).to.equal("Description B");
+  });
 });
 
-//   it("Should create a restaurant", async function () {
-//     const metaMaskID = owner.address;
-//     const name = "Restaurant A";
-//     const description = "A nice place to eat";
-    
-//     await restaurant.createRestaurant(metaMaskID, name, description);
-//     const restaurantInfo = await restaurant.getRestaurant(metaMaskID);
-
-//     expect(restaurantInfo.name).to.equal(name);
-//     expect(restaurantInfo.description).to.equal(description);
-//     expect(restaurantInfo.productCount).to.equal(0); // Assuming product count starts at 0
-//    });
-
-//   it("Should add a product to the restaurant", async function () {
-//     const metaMaskID = owner.address;
-//     const price = 100; // Price in wei
-//     const description = "Product A";
-//     const gramaj = "100g";
-
-//     await restaurant.createRestaurant(metaMaskID, "Restaurant A", "A nice place to eat");
-//     await restaurant.addProduct(metaMaskID, price, description, gramaj);
-
-//     const productInfo = await restaurant.getProduct(metaMaskID, 1); // Assuming product ID starts at 1
-
-//     expect(productInfo.price).to.equal(price);
-//     expect(productInfo.description).to.equal(description);
-//     expect(productInfo.gramaj).to.equal(gramaj);
-//   });
-
-//   it("Should calculate the sum of selected products' prices", async function () {
-//     const metaMaskID = owner.address;
-//     const productPrices = [100, 200, 150]; // Prices in wei
-
-//     await restaurant.createRestaurant(metaMaskID, "Restaurant A", "A nice place to eat");
-//     for (const price of productPrices) {
-//       await restaurant.addProduct(metaMaskID, price, "Product", "100g");
-//     }
-
-//     const sum = await restaurant.sumProducts(metaMaskID, [1, 3]); // Assuming product IDs start at 1
-
-//     expect(sum).to.equal(productPrices[0] + productPrices[2]);
-//   });
-// });
