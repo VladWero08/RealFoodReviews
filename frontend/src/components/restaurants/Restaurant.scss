@@ -1,0 +1,35 @@
+@import "../../css/style.scss";
+
+.restaurant__wrapper {
+    padding: $l-padding;
+}
+
+.restaurant__wrapper h3 {
+    padding: $s-padding 0 ; 
+}
+
+// Menu title above the menu items
+.menu-title {
+    margin-top: $m-padding;
+    margin-bottom: $s-padding;
+}
+
+// Menu items
+.menu-items {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-gap: $s-padding;
+}
+
+.btn-reviews-show:hover { cursor: pointer; }
+
+// Reviews wrapper, to display the button 
+// that extends the reviews
+.reviews-title__wrapper { 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: $m-padding;
+    margin-bottom: $s-padding;
+}
