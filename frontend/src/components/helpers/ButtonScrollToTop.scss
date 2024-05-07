@@ -1,0 +1,16 @@
+@import "../../css/style.scss";
+
+.btn-scroll-to-top {
+    position: fixed;
+    right: $s-padding;
+    bottom: $s-padding;
+    background: $purple-highlight;
+}
+.btn-scroll-to-top:hover {
+    cursor: pointer;
+}
+
+.btn-scroll-to-top img {
+    width: 35px;
+}
+

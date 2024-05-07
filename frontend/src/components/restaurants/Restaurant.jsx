@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom"
 
-import "./Restaurant.css"
+import "./Restaurant.scss"
 
 export default function Restaurant() {
     const { id } = useParams();
