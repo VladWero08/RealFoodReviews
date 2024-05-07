@@ -1,4 +1,4 @@
-import "./Authentication.css";
+import "./Authentication.scss";
 
 export default function SignIn() {
     return (

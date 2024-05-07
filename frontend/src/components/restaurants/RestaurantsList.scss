@@ -1,0 +1,70 @@
+@import "../../css/style.scss";
+
+.restaurants-list__wrapper {
+    padding: $l-padding;
+    color: $dark; 
+}
+
+.restaurants-list__description {
+    padding: $m-padding 0;
+}
+
+/* SORTING OPTIONS */
+.sort-options {
+    display: flex;
+    align-items: center;
+    padding: $s-padding 0;
+}
+
+.sort-option {
+    background: $blue-highlight;
+    color: $white;
+    
+    margin-right: $s-padding;
+    padding: $xs-padding;
+    border-radius: 8px;
+}
+
+.sort-option:hover { cursor: pointer; }
+.sort-option-active { background: $blue-darker-highlight;}
+
+/* RESTAURANT CARD LISTS */
+.restaurants-card-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.restaurant-card {
+    background: rgba( 255, 255, 255, 0.35 );
+    backdrop-filter: blur( 6.5px );
+    -webkit-backdrop-filter: blur( 6.5px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    
+    padding: $m-padding;
+    margin-bottom: $s-padding;
+}
+
+.restaurant-card-title {
+    color: $purple-highlight;
+}
+
+.restaurant-card-title__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.restaurant-card-details__wrapper {
+    display: flex;
+    align-items: center;
+    padding: $s-padding 0;
+}
+
+.restaurant-card-products {
+    margin-right: $m-padding;
+}
+
+.restaurant-card-description {
+    color: $dark-light;
+}
