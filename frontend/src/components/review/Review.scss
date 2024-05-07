@@ -1,0 +1,18 @@
+@import "../../css/style.scss";
+
+.review__wrapper {
+    background: rgba( 255, 255, 255, 0.7 );
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px; 
+    backdrop-filter: blur( 9.5px );
+    -webkit-backdrop-filter: blur( 9.5px );
+    
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+    padding: $m-padding;
+    margin-bottom: $s-padding;
+}
+
+.review__wrapper p {
+    margin-top: $xs-padding;
+}
