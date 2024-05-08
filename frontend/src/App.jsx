@@ -7,6 +7,22 @@ import RestaurantsList from "./components/restaurants/RestaurantsList";
 import Register from "./components/authentication/Register";
 import SignIn from "./components/authentication/SignIn";
 
+import Web3 from "web3";
+import { 
+  ethTransferAbi, ethTransferAddress, 
+  myERC20Abi, myERC20Address, 
+  restaurantAbi, restaurantAddress, 
+  reviewAbi, reviewAddress, 
+  userAbi, userAddress 
+} from "../utils/constants";
+
+const web3 = new Web3("http://localhost:8545");
+export const ethTransferContract = new web3.eth.Contract(ethTransferAbi, ethTransferAddress);
+export const myERC20Contract = new web3.eth.Contract(myERC20Abi, myERC20Address);
+export const restaurantContract = new web3.eth.Contract(restaurantAbi, restaurantAddress);
+export const reviewContract = new web3.eth.Contract(reviewAbi, reviewAddress);
+export const userContract = new web3.eth.Contract(userAbi, userAddress);
+
 function App() {
   // get the current location using the location hook
   const location = useLocation();
