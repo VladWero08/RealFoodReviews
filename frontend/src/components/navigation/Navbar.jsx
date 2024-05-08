@@ -5,6 +5,8 @@ import logo from "../../assets/logo.png";
 
 
 function Navbar() {
+    const account = localStorage.getItem("account");
+
     return (
         <div className="navbar__wrapper">
             <div className="navbar__logo">
@@ -28,7 +30,9 @@ function Navbar() {
                 <button className="navbar__btn btn-sign-up">
                     <Link to="/register">Register</Link>
                 </button>
+
                 <MetamaskButtonConnect/>
+
             </div>
         </div>
     )
