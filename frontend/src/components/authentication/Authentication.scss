@@ -1,0 +1,59 @@
+@import "../../css/style.scss";
+
+.registration__wrapper {
+    display: flex;
+}
+
+/* REGISTRATION LEFT SIDE*/
+.registration__left {
+    flex: 6;
+    display: flex;
+    flex-direction: column;
+
+    padding: $xl-padding;
+    line-height: 1.5;
+}
+.registration__left a { text-decoration: none; }
+
+.registration__left-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: $m-padding;
+}
+.registration__left-title:hover { cursor: pointer; }
+
+.registration__left-title img { height: 100px; }
+.registration__left-title h1 { color: $purple-highlight; }
+
+/* REGISTRATION RIGHT SIDE*/
+.registration__right {
+    background: $purple-highlight;
+    height: calc(100vh - 2 * #{$xl-padding});
+    padding: $xl-padding;
+    flex: 4;
+}
+
+.registration__right {
+    color: $white;
+}
+
+.registration__right-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.registration__right-type {
+    margin-top: $xs-padding;
+    margin-bottom: $m-padding;
+}
+
+.registration-inputs {
+    display: flex;
+    flex-direction: column;
+    margin: $m-padding 0;
+}
+
+.registration-inputs__spacing {
+    margin-top: $m-padding;
+}

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import MetamaskButtonConnect from "../metamask/MetamaskButtonConnect";
 import "./Navbar.scss";
 import logo from "../../assets/logo.png";
 
@@ -27,9 +28,7 @@ function Navbar() {
                 <button className="navbar__btn btn-sign-up">
                     <Link to="/register">Register</Link>
                 </button>
-                <button className="navbar__btn btn-sign-in">
-                    <Link to="/sign-in">Sign in</Link>
-                </button>
+                <MetamaskButtonConnect/>
             </div>
         </div>
     )
