@@ -9,7 +9,7 @@ import "./Restaurant.scss"
 
 export default function Restaurant() {
     const [showReviewArrow, setShowReviewArrow] = useState("↓");
-    const [showReviews, setShowReviews] = useState(true);
+    const [showReviews, setShowReviews] = useState(false);
 
     const handleShowReviewsClick = () => {
         if (showReviews === false) {

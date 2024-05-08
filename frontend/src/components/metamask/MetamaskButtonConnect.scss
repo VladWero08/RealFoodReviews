@@ -1,0 +1,19 @@
+@import "../../css/style.scss";
+
+.btn-metamask {
+    display: flex;
+    align-items: center;
+    background: $metamask-orange;
+
+    padding: $s-padding;
+    border-radius: 8px;
+    text-transform: uppercase;
+    transition: 0.4s;
+}
+.btn-metamask:hover { 
+    background: $metamask-orange-darker;
+    cursor: pointer; 
+}
+
+.btn-metamask img { height: 30px; margin-right: $xs-padding;}
+.btn-metamask p { color: $white; }
