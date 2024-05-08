@@ -5,8 +5,6 @@ import logo from "../../assets/logo.png";
 
 
 function Navbar() {
-    const account = localStorage.getItem("account");
-
     return (
         <div className="navbar__wrapper">
             <div className="navbar__logo">

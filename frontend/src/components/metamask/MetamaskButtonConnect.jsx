@@ -1,19 +1,20 @@
 import { useState } from "react";
-import { Modal, Button } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { Modal } from '@mui/material';
 
 import metamask from "../../assets/metamask.svg";
 
 import "./MetamaskButtonConnect.scss";
+import { setWalletAddress } from "../../actions";
 
 export default function MetamaskButtonConnect() {
-    const [address, setAddress] = useState(() => {
-        const account = localStorage.getItem("account");
-        return account; 
-    });
+    const dispatch = useDispatch();
+    const address = useSelector(state => state.walletAddress);
     const [modal, setModal] = useState(false);
 
     const handleMetamaskSuccessfullConnection = (account) => {
-        setAddress(account);
+        dispatch(setWalletAddress(account));
         localStorage.setItem("account", JSON.stringify(account));
     }
 
@@ -32,7 +33,7 @@ export default function MetamaskButtonConnect() {
     };
 
     const handleMetamaskWalletDisconnection = () => {
-        setAddress(null);
+        dispatch(setWalletAddress(null));
         localStorage.removeItem("account");
     }
 
