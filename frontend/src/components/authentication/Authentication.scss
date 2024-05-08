@@ -57,3 +57,19 @@
 .registration-inputs__spacing {
     margin-top: $m-padding;
 }
+
+.btns-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.btn-create {
+    background: $blue-highlight;
+
+    padding: calc(5px + $s-padding);
+    margin-left: $s-padding;
+    border-radius: 8px;
+    text-transform: uppercase;
+}
+
+.btn-create:hover { cursor: pointer; }

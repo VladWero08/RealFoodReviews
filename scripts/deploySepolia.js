@@ -1,5 +1,81 @@
 require("@nomiclabs/hardhat-ethers");
 const { ethers } = require("hardhat");
+const fs = require('fs');
+
+/**
+ * Function to copy all the compiled contracts from
+ * the ./artifcats directory to the ./frontend/utils directory.
+ * 
+ * It is supposed that the contracts have been compiled
+ * when this function is executed.
+ */
+function copyCompiledContractsJSONs() {
+    fs.copyFileSync(
+        "./artifacts/contracts/EthTransfer.sol/EthTransfer.json",
+        "./frontend/utils/EthTransfer.json",
+    );
+    fs.copyFileSync(
+        "./artifacts/contracts/MyERC20.sol/MyERC20.json",
+        "./frontend/utils/MyERC20.json",
+    );
+    fs.copyFileSync(
+        "./artifacts/contracts/Restaurant.sol/Restaurant.json",
+        "./frontend/utils/Restaurant.json",
+    );
+    fs.copyFileSync(
+        "./artifacts/contracts/Review.sol/Review.json",
+        "./frontend/utils/Review.json",
+    );
+    fs.copyFileSync(
+        "./artifacts/contracts/User.sol/User.json",
+        "./frontend/utils/User.json",
+    );
+}
+
+/**
+ * Creates a JS file with all the constants needed
+ * for the contracts: ABI and their address.
+ */
+function createContractConstantsFile(
+    restaurantAddress,
+    userAddress,
+    EC20Address,
+    reviewAddress,
+    ethTransferAddress
+) {
+    const contractConstants = `
+        import EthTransfer from './EthTransfer.json';
+        import MyERC20 from './MyERC20.json';
+        import Restaurant from './Restaurant.json';
+        import Review from './Review.json';
+        import User from './User.json';
+        
+        export const ethTransferAbi = EthTransfer.abi;
+        export const ethTransferAddress = "${ethTransferAddress}";
+        
+        export const myERC20Abi = MyERC20.abi;
+        export const myERC20Address = "${EC20Address}";
+        
+        export const restaurantAbi = Restaurant.abi;
+        export const restaurantAddress = "${restaurantAddress}";
+        
+        export const reviewAbi = Review.abi;
+        export const reviewAddress = "${reviewAddress}";
+        
+        export const userAbi = User.abi;
+        export const userAddress = "${userAddress}";
+    `;
+
+    // create the utils/constants.js file, which will contain
+    // the ABI and address of each contract
+    fs.writeFileSync("./frontend/utils/constants.js", contractConstants, (error) => {
+        if (error) {
+            console.log("Couldn't create contract constants file:", error);
+        } else {
+            console.log("Succesfully create contract constants file.");
+        }
+    });
+}
 
 async function deploy() {
     [owner] = await ethers.getSigners();
@@ -29,6 +105,8 @@ async function deploy() {
     await token5.deployed();
     console.log("Eth address: ", token5.address)
 
+    copyCompiledContractsJSONs();
+    createContractConstantsFile();
 }
 
 deploy()

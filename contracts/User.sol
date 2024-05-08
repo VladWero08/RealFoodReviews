@@ -23,7 +23,7 @@ contract User {
         userCount++;
         users[_metaMaskID] = UserStruct(_metaMaskID);
         
-        emit UserAdded(userCount -1, _metaMaskID);
+        emit UserAdded(userCount + 1, _metaMaskID);
     }
 }
 

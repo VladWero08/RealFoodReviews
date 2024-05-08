@@ -1,20 +1,98 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
+
 import { Link } from "react-router-dom";
 
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import MetamaskButtonConnect from "../metamask/MetamaskButtonConnect";
+import { userContract, restaurantContract } from "../../App";
 
 import logo from "../../assets/logo.png";
 
 import "./Authentication.scss";
+import { setAccountType } from "../../actions";
 
 export default function Register() {
-    const [checked, setChecked] = useState(false);
+    const navigation = useNavigate();
+    const dispatch = useDispatch();
+    const address = useSelector(state => state.walletAddress);
 
-    const handleChange = (event) => {
+    const [checked, setChecked] = useState(false);
+    const [restaurantName, setRestaurantName] = useState(null);
+    const [restaurantDescription, setRestaurantDescription] = useState(null);
+
+    const handleRegistrationTypeChange = (event) => {
       setChecked(event.target.checked);
     };
+
+    /**
+     * Handles the click on the "CREATE" button,
+     * and fires the specific handler depending
+     * on the type of account the user wants to create: user or restaurant.
+     */
+    const handleCreateClick = async () => {
+        if (checked === true) { 
+            await handleCreateRestaurant();
+        } else {
+            await handleCreateUser();
+        }
+    }
+
+    /**
+     * Creates an user account if the Metamask account
+     * is connected and if it does not exists already.
+     */
+    const handleCreateUser = async () => {
+        // check if the user connected his Metamask account
+        if (address === null) {
+            alert("You need to connect your Metamask account first!");
+            return;
+        } 
+
+        // try to create the account
+        await userContract.methods.createUser(address).send({from: address})
+            .on("error", (error) => {
+                alert("The account could not be created. Try again.");
+                return;
+            });   
+            
+        // also set the account type in redux 
+        // and local storage to "user"
+        dispatch(setAccountType("user"));
+        localStorage.setItem("accountType", "user");
+        // if the account was created successfully,
+        // return to the main page
+        navigation("/");
+    }
+
+    const handleCreateRestaurant = async () => {
+        // check if the user connected his Metamask account
+        if (address === null) {
+            alert("You need to connect your Metamask account first!");
+            return;
+        } 
+
+        if (restaurantName === null || restaurantDescription === null) {
+            alert("All fields need to be completed to create a restaurant!");
+            return;
+        }
+
+        await restaurantContract.methods.createRestaurant(address, restaurantName, restaurantDescription).send({from: address})
+            .on("error", (error) => {
+                alert("The account could not be created. Try again.");
+                return;
+            })
+
+        // also set the account type in redux 
+        // and local storage to "restaurant"
+        dispatch(setAccountType("restaurant"));
+        localStorage.setItem("accountType", "restaurant");
+        // if the account was created succesfully,
+        // return to the main page
+        navigation("/");
+    }
 
     return (
         <div className="registration__wrapper">
@@ -40,7 +118,7 @@ export default function Register() {
                     <h1>Registration</h1>
                     <Switch
                         checked={checked}
-                        onChange={handleChange}
+                        onChange={handleRegistrationTypeChange}
                         inputProps={{ 'aria-label': 'controlled' }}
                         sx={{
                             '& .MuiSwitch-thumb': {
@@ -65,18 +143,32 @@ export default function Register() {
                 
                 {checked == true &&
                     <div className="registration-inputs">
-                        <TextField id="outlined-basic" label="Name" variant="outlined"/> 
+                        <TextField 
+                            id="outlined-basic" 
+                            label="Name" 
+                            variant="outlined"
+                            onChange={(event) => {setRestaurantName(event.target.value);}}
+                        /> 
                         <div className="registration-inputs__spacing"></div>
                         <TextField
                             label="Description"
                             multiline
                             rows={4}
                             variant="outlined"
+                            onChange={(event) => {setRestaurantDescription(event.target.value);}}
                         />     
                     </div>
                 }
 
-                <MetamaskButtonConnect/>
+                <div className="btns-wrapper">
+                    <MetamaskButtonConnect/>
+                    <div 
+                        className="btn-create"
+                        onClick={handleCreateClick}    
+                    >
+                        CREATE
+                    </div>
+                </div>
             </div>
 
 

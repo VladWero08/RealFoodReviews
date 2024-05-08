@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .vite/
+
+# packages
+package-lock.json
