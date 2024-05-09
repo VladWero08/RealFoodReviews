@@ -28,7 +28,7 @@ function Navbar() {
 
                 {accountType === "restaurant" && (
                     <div className="navbar__link">
-                        <Link to="/restaurants/0">My restaurant</Link>
+                        <Link to={`/restaurants/${address}`}>My restaurant</Link>
                     </div>
                 )}
 

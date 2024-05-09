@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Restaurant {
@@ -64,19 +65,26 @@ contract Restaurant {
     }
 
     function getAllRestaurants() external view returns (
+        address[] memory restaurantAddresses,
         string[] memory restaurantNames,
-        string[] memory restaurantDescriptions
+        string[] memory restaurantDescriptions,
+        uint[] memory restautrantProductCounts
     ) {
+        restaurantAddresses = new address[](restaurantCount);
         restaurantNames = new string[](restaurantCount);
         restaurantDescriptions = new string[](restaurantCount);
-        
+        restautrantProductCounts = new uint[](restaurantCount);
+
         for (uint i = 0; i < restaurantCount; i++) {
             address restaurantAddress = restaurantsByIndex[i + 1];
+
+            restaurantAddresses[i] = restaurantAddress;
             restaurantNames[i] = restaurants[restaurantAddress].name;
             restaurantDescriptions[i] = restaurants[restaurantAddress].description;
+            restautrantProductCounts[i] = restaurants[restaurantAddress].productCount;
         }
 
-        return (restaurantNames, restaurantDescriptions);
+        return (restaurantAddresses, restaurantNames, restaurantDescriptions, restautrantProductCounts);
     }
 
     function getRestaurantCount() external view returns (uint) {

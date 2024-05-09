@@ -1,36 +1,12 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import "./RestaurantsList.scss"
 
 import ButtonScrollToTop from "../helpers/ButtonScrollToTop";
+import { restaurantContract } from "../../App";
 
 export default function RestaurantsList() {
-    const [restaurants, setRestaurants] = useState([
-        {
-            "name": "Maki Sushi 1",
-            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia ex consequatur totam unde beatae iure mollitia repudiandae, possimus doloribus",
-            "productCount": 30,
-            "rating": 4.5
-        },
-        {
-            "name": "Maki Sushi 2",
-            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia ex consequatur totam unde beatae iure mollitia repudiandae, possimus doloribus",
-            "productCount": 40,
-            "rating": 4.6
-        },
-        {
-            "name": "Maki Sushi 3",
-            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia ex consequatur totam unde beatae iure mollitia repudiandae, possimus doloribus",
-            "productCount": 50,
-            "rating": 4.8
-        },
-        {
-            "name": "Maki Sushi 4",
-            "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia ex consequatur totam unde beatae iure mollitia repudiandae, possimus doloribus",
-            "productCount": 60,
-            "rating": 4.7
-        },
-    ]);
+    const [restaurants, setRestaurants] = useState([]);
     const [sortActiveOption, setSortActiveOption] = useState(null); 
     const sortOptions = [
         "⭐ ASC",
@@ -38,6 +14,27 @@ export default function RestaurantsList() {
         "Products ASC",
         "Products DESC"
     ];
+
+    useEffect(() => {
+        async function loadRestaurants() {
+            const restaurantsObjects = [];
+            const restaurantsInBlockchain = await restaurantContract.methods.getAllRestaurants().call();
+
+            for (let i = 0; i < restaurantsInBlockchain.restaurantNames.length; i++) {
+                restaurantsObjects.push({
+                    "address": restaurantsInBlockchain.restaurantAddresses[i],
+                    "name": restaurantsInBlockchain.restaurantNames[i],
+                    "description": restaurantsInBlockchain.restaurantDescriptions[i],
+                    "productCount": Number(restaurantsInBlockchain.restautrantProductCounts[i]),
+                    "rating": 4,
+                });
+            }
+        
+            setRestaurants(restaurantsObjects);
+        }
+
+        loadRestaurants();
+    }, []);
 
     const handleSortOptionClick = (sortType) => {
         let sortedRestaurants;
@@ -104,7 +101,7 @@ export default function RestaurantsList() {
                     <div key={index} className="restaurant-card">
                         <div className="restaurant-card-title__wrapper">
                             <h2 className="restaurant-card-title">{restaurant.name}</h2>
-                            <Link to={`/restaurants/${index}`}>See the menu</Link>
+                            <Link to={`/restaurants/${restaurant.address}`}>See the menu</Link>
                         </div>
     
                         <div className="restaurant-card-details__wrapper">

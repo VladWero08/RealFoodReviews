@@ -1,15 +1,25 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 
 import MenuItem from "./MenuItem";
 import Review from "../review/Review";
 import ButtonScrollToTop from "../helpers/ButtonScrollToTop";
 
+import { restaurantContract } from "../../App";
 import "./Restaurant.scss"
 
 export default function Restaurant() {
+    const { id } = useParams();
     const [showReviewArrow, setShowReviewArrow] = useState("↓");
     const [showReviews, setShowReviews] = useState(false);
+
+    const loadRestaurant = async() => {
+        await restaurantContract.methods.getRestaurant(id).call();
+    }
+
+    useEffect(() => {
+
+    }, []);
 
     const handleShowReviewsClick = () => {
         if (showReviews === false) {
@@ -21,7 +31,6 @@ export default function Restaurant() {
         }
     }
 
-    const { id } = useParams();
     const rating = 4.5;
     const description = "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corrupti earum soluta, ex totam accusantium consequuntur fugit corporis! Quos, doloribus! Provident, laboriosam aliquid. Eaque obcaecati exercitationem, consequatur consequuntur distinctio accusantium blanditiis labore impedit repudiandae deserunt quo enim minima laudantium, optio reiciendis facilis ut. Modi, eaque qui mollitia assumenda aut aperiam ad.";
     const productCount = 30;
