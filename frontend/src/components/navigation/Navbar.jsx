@@ -28,11 +28,7 @@ function Navbar() {
 
                 {accountType === "restaurant" && (
                     <div className="navbar__link">
-<<<<<<< HEAD
                         <Link to={`/restaurants/my-restaurant`}>My restaurant</Link>
-=======
-                        <Link to={`/restaurants/${address}`}>My restaurant</Link>
->>>>>>> d147ce8 (modified the restaurant contract to extract more data when retrieving all restaurants, connected the restaurant list page to the blockchain)
                     </div>
                 )}
 
