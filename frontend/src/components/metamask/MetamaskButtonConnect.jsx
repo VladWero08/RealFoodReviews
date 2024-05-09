@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 
 import { Modal } from '@mui/material';
 
@@ -11,6 +12,8 @@ import "./MetamaskButtonConnect.scss";
 
 export default function MetamaskButtonConnect() {
     const dispatch = useDispatch();
+    const navigation = useNavigate();
+
     const address = useSelector(state => state.walletAddress);
     const [modal, setModal] = useState(false);
 
@@ -43,6 +46,12 @@ export default function MetamaskButtonConnect() {
         const accountType = await getAccountType(account);
         dispatch(setAccountType(accountType))
         localStorage.setItem("accountType", accountType);
+
+        // even if the wallet is connected, if the user does
+        // not have an account, redirect the user to register page
+        if (accountType !== "user" && accountType !== "restaurant") {
+            navigation("/register");
+        }
     }
 
     /**
@@ -77,7 +86,7 @@ export default function MetamaskButtonConnect() {
         return (
             <div 
                 className="btn-metamask"
-                onClick={async () => await handleMetamaskWalletConnection()}
+                onClick={async () => {await handleMetamaskWalletConnection(); setModal(false);}}
             >   
                 <img src={metamask} alt="metamask"/>
                 <p>Connect</p>
@@ -99,7 +108,7 @@ export default function MetamaskButtonConnect() {
                     <p>Do you want to disconnect your <br></br>Metamask waller from Real Food Reviews? 😔</p>
                     <div 
                         className="btn-yes"
-                        onClick={handleMetamaskWalletDisconnection}
+                        onClick={() => handleMetamaskWalletDisconnection()}
                     >Yes</div>
                 </div>
             </Modal>

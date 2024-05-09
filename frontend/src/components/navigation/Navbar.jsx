@@ -45,9 +45,11 @@ function Navbar() {
             </div>
             
             <div className="navbar__buttons">
-                <button className="navbar__btn btn-sign-up">
-                    <Link to="/register">Register</Link>
-                </button>
+                {accountType !== "user" && accountType !== "restaurant" && (
+                    <button className="navbar__btn btn-sign-up">
+                        <Link to="/register">Register</Link>
+                    </button>
+                )}
 
                 <MetamaskButtonConnect/>
 
