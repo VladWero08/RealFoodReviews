@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import "./RestaurantsList.scss"
 
 import ButtonScrollToTop from "../helpers/ButtonScrollToTop";
-import { restaurantContract } from "../../App";
+import { restaurantContract, reviewContract } from "../../App";
 
 export default function RestaurantsList() {
     const [restaurants, setRestaurants] = useState([]);
@@ -21,12 +21,20 @@ export default function RestaurantsList() {
             const restaurantsInBlockchain = await restaurantContract.methods.getAllRestaurants().call();
 
             for (let i = 0; i < restaurantsInBlockchain.restaurantNames.length; i++) {
+                const address = restaurantsInBlockchain.restaurantAddresses[i];
+                const name = restaurantsInBlockchain.restaurantNames[i];;
+                const description = restaurantsInBlockchain.restaurantDescriptions[i];
+                const productCount = Number(restaurantsInBlockchain.restautrantProductCounts[i]);
+                
+                const reviews = await reviewContract.methods.getUserReviewsForRestaurant(address).call();
+                const reviewRating = getReviewRatingMessage(reviews);
+
                 restaurantsObjects.push({
-                    "address": restaurantsInBlockchain.restaurantAddresses[i],
-                    "name": restaurantsInBlockchain.restaurantNames[i],
-                    "description": restaurantsInBlockchain.restaurantDescriptions[i],
-                    "productCount": Number(restaurantsInBlockchain.restautrantProductCounts[i]),
-                    "rating": 4,
+                    "address": address,
+                    "name": name,
+                    "description": description,
+                    "productCount": productCount,
+                    "rating": reviewRating,
                 });
             }
         
@@ -35,6 +43,32 @@ export default function RestaurantsList() {
 
         loadRestaurants();
     }, []);
+
+    /**
+     * Computes the mean review rating, based
+     * on all the reviews left by the customers.
+     */
+    const getReviewRating = (reviews) => {
+        let reviewRating = 0;
+
+        for (let i = 0; i < reviews.length; i++) {
+            reviewRating += reviews[i].rating;
+        }
+
+        return `${(reviewRating / reviews.length).toFixed(2)} / 5 ⭐`;
+    }
+
+    /**
+     * Returns the message to display
+     * the overall rating of the restaurant.
+     */
+    const getReviewRatingMessage = (reviews) => {
+        if (reviews.length == 0) {
+            return "No reviews yet... ⭐";
+        }
+
+        return getReviewRating(reviews);
+    }
 
     const handleSortOptionClick = (sortType) => {
         let sortedRestaurants;
@@ -106,7 +140,7 @@ export default function RestaurantsList() {
     
                         <div className="restaurant-card-details__wrapper">
                             <h5 className="restaurant-card-products">{restaurant.productCount} Products</h5>
-                            <h5>{restaurant.rating} / 5 ⭐</h5>
+                            <h5>{restaurant.rating}</h5>
                         </div>
                         
                         <p className="restaurant-card-description">{restaurant.description}</p>

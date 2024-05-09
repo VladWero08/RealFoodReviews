@@ -28,17 +28,17 @@ function Navbar() {
 
                 {accountType === "restaurant" && (
                     <div className="navbar__link">
-                        <Link to={`/restaurants/${address}`}>My restaurant</Link>
+                        <Link to={`/restaurants/my-restaurant`}>My restaurant</Link>
                     </div>
                 )}
 
                 {accountType === "user" && (
                     <>
                         <div className="navbar__link">
-                            <Link to="/restaurants/0">My receipts</Link>
+                            <Link to={`/restaurants/${address}`}>My receipts</Link>
                         </div>
                         <div className="navbar__link">
-                            <Link to="/restaurants/0">My reviews</Link>
+                            <Link to={`/restaurants/${address}`}>My reviews</Link>
                         </div>
                     </>
                 )}

@@ -116,6 +116,7 @@ contract MyERC20{
         uint256 amount, 
         uint[] memory productIDs, 
         uint[] memory prices, 
+        string[] memory names,
         string[] memory descriptions, 
         string[] memory gramajs) {
         require(_orderId > 0 && _orderId <= orderCount, "Invalid order ID");
@@ -123,20 +124,22 @@ contract MyERC20{
         OrderData storage order = orders[_orderId];
         uint[] memory _productIDs = new uint[](order.products.length);
         uint[] memory _prices = new uint[](order.products.length);
+        string[] memory _names = new string[](order.products.length);
         string[] memory _descriptions = new string[](order.products.length);
         string[] memory _gramajs = new string[](order.products.length);
 
         for (uint i = 0; i < order.products.length; i++) {
-            (uint productID, uint price, string memory description, string memory gramaj) =
+            (uint productID, string memory _name, uint price, string memory description, string memory gramaj) =
                 restaurantToken.getProduct(order.to, order.products[i]);
 
             _productIDs[i] = productID;
             _prices[i] = price;
+            _names[i] = _name;
             _descriptions[i] = description;
             _gramajs[i] = gramaj;
         }
 
-        return (order.from, order.to, order.amount, _productIDs, _prices, _descriptions, _gramajs);        
+        return (order.from, order.to, order.amount, _productIDs, _prices, _names,  _descriptions, _gramajs);        
     }
 
     function getOrdersByUser(address _userAddress) external view returns (OrderData[] memory) {
