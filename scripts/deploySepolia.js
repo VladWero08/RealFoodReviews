@@ -50,20 +50,20 @@ function createContractConstantsFile(
         import Review from './Review.json';
         import User from './User.json';
         
-        export const ethTransferAbi = EthTransfer.abi;
-        export const ethTransferAddress = "${ethTransferAddress}";
-        
+        export const restaurantAbi = Restaurant.abi;
+        export const restaurantAddress = "${restaurantAddress}";
+
+        export const userAbi = User.abi;
+        export const userAddress = "${userAddress}";
+
         export const myERC20Abi = MyERC20.abi;
         export const myERC20Address = "${EC20Address}";
         
-        export const restaurantAbi = Restaurant.abi;
-        export const restaurantAddress = "${restaurantAddress}";
-        
         export const reviewAbi = Review.abi;
         export const reviewAddress = "${reviewAddress}";
-        
-        export const userAbi = User.abi;
-        export const userAddress = "${userAddress}";
+
+        export const ethTransferAbi = EthTransfer.abi;
+        export const ethTransferAddress = "${ethTransferAddress}";
     `;
 
     // create the utils/constants.js file, which will contain
@@ -106,7 +106,13 @@ async function deploy() {
     console.log("Eth address: ", token5.address)
 
     copyCompiledContractsJSONs();
-    createContractConstantsFile();
+    createContractConstantsFile(
+        token.address,
+        token2.address,
+        token3.address,
+        token4.address,
+        token5.address,
+    );
 }
 
 deploy()
