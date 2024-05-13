@@ -1,0 +1,30 @@
+@import "../../css/style.scss";
+
+.product-form__wrapper {
+    margin-top: $m-padding;
+    margin-bottom: $s-padding;
+}
+
+.product-form {
+    display: flex;
+    flex-direction: column;
+    gap: $s-padding;
+}
+
+.product-form__box { display: flex; gap: $s-padding;}
+.product-form__box-input { flex: 1;}
+
+.btn-submit {
+    background: $blue-highlight;
+    color: $white;
+
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    border-radius: $xs-padding;
+    padding: $s-padding;
+    max-width: 80px;
+}
+.btn-submit:hover { 
+    background: $blue-darker-highlight;
+    transition: 0.4s;
+    cursor: pointer; 
+}

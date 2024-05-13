@@ -1,11 +1,11 @@
 import "./MenuItem.scss"
 
-export default function MenuItem({index, name, price, gramaj, description}) {
+export default function MenuItem({index, name, price, gramaj, description, addable}) {
     return (
         <div key={index} className="menu-item">
             <div className="menu-item-title__wrapper">
                 <h2 className="menu-item-title">{name}</h2>
-                <h2 className="menu-item-add">+</h2>
+                {addable && (<h2 className="menu-item-add">+</h2>)}
             </div>
 
             <div className="menu-item-details__wrapper">

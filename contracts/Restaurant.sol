@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
 
 contract Restaurant {
     
     struct Product {
         uint productID;
+        string name;
         uint price;
         string description;
         string gramaj;
@@ -24,7 +26,7 @@ contract Restaurant {
     uint public restaurantCount;
 
     event RestaurantAdded(uint indexed restaurantID, address metaMaskID, string name, string description);
-    event ProductAdded(address indexed restaurantID, uint indexed productID, uint price, string description, string gramaj);
+    event ProductAdded(address indexed restaurantID, string name, uint indexed productID, uint price, string description, string gramaj);
     event BalanceUpdated(address indexed restaurantID, uint newBalance);
 
     function restaurantExists(address _restaurantAddress) public view returns (bool) {
@@ -64,19 +66,26 @@ contract Restaurant {
     }
 
     function getAllRestaurants() external view returns (
+        address[] memory restaurantAddresses,
         string[] memory restaurantNames,
-        string[] memory restaurantDescriptions
+        string[] memory restaurantDescriptions,
+        uint[] memory restautrantProductCounts
     ) {
+        restaurantAddresses = new address[](restaurantCount);
         restaurantNames = new string[](restaurantCount);
         restaurantDescriptions = new string[](restaurantCount);
-        
+        restautrantProductCounts = new uint[](restaurantCount);
+
         for (uint i = 0; i < restaurantCount; i++) {
             address restaurantAddress = restaurantsByIndex[i + 1];
+
+            restaurantAddresses[i] = restaurantAddress;
             restaurantNames[i] = restaurants[restaurantAddress].name;
             restaurantDescriptions[i] = restaurants[restaurantAddress].description;
+            restautrantProductCounts[i] = restaurants[restaurantAddress].productCount;
         }
 
-        return (restaurantNames, restaurantDescriptions);
+        return (restaurantAddresses, restaurantNames, restaurantDescriptions, restautrantProductCounts);
     }
 
     function getRestaurantCount() external view returns (uint) {
@@ -84,16 +93,17 @@ contract Restaurant {
     }
 
     // product related methosd
-    function addProduct(address _restaurantAddress, uint _price, string memory _description, string memory _gramaj) external {
+    function addProduct(address _restaurantAddress, string memory _name, uint _price, string memory _description, string memory _gramaj) external {
         restaurants[_restaurantAddress].productCount++;
         uint productID = restaurants[_restaurantAddress].productCount;
-        restaurantProducts[_restaurantAddress][productID] = Product(productID, _price, _description, _gramaj);
+        restaurantProducts[_restaurantAddress][productID] = Product(productID, _name, _price, _description, _gramaj);
         
-        emit ProductAdded(_restaurantAddress, productID, _price, _description, _gramaj);
+        emit ProductAdded(_restaurantAddress, _name, productID, _price, _description, _gramaj);
     }
 
     function getProduct(address _restaurantID, uint _productID) external view returns (
         uint productID,
+        string memory name,
         uint price,
         string memory description,
         string memory gramaj
@@ -101,6 +111,7 @@ contract Restaurant {
         Product memory product = restaurantProducts[_restaurantID][_productID];
         return (
             product.productID,
+            product.name,
             product.price,
             product.description,
             product.gramaj

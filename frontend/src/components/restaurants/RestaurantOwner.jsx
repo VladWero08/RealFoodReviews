@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { isAddress } from "web3-validator";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import MenuItem from "./MenuItem";
 import Review from "../review/Review";
+import ProductForm from "./ProductForm";
 import ButtonScrollToTop from "../helpers/ButtonScrollToTop";
 
 import { restaurantContract, reviewContract } from "../../App";
 import "./Restaurant.scss"
 
 export default function Restaurant() {
-    const { id } = useParams();
+    const address = useSelector(state => state.walletAddress);
+    const accountType = useSelector(state => state.accountType);
     const navigation = useNavigate();
 
     const [restaurant, setRestaurant] = useState({
@@ -29,10 +31,10 @@ export default function Restaurant() {
      * the restaurant from the blockchain.
      */
     const loadRestaurant = async() => {
-        let restaurantData = await restaurantContract.methods.getRestaurant(id).call();
+        let restaurantData = await restaurantContract.methods.getRestaurant(address).call();
         // transform the number of products from bigint to number
         restaurantData.productCount = Number(restaurantData.productCount);
-        const restaurantReviews = await reviewContract.methods.getUserReviewsForRestaurant(id).call();
+        const restaurantReviews = await reviewContract.methods.getUserReviewsForRestaurant(address).call();
         
         setRestaurant(restaurantData);
         setReviews(restaurantReviews);
@@ -41,7 +43,7 @@ export default function Restaurant() {
     useEffect(() => {
         // check if the address entered 
         // in the URL is valid
-        if (!isAddress(id)) {
+        if (accountType !== "restaurant") {
             navigation("/restaurants");
             return;
         }
@@ -95,6 +97,8 @@ export default function Restaurant() {
             <h3>{getReviewRatingMessage()}</h3>
             <p>{restaurant.description}</p>
             
+            <ProductForm address={address}/>
+
             <h3 className="menu-title">
                 Menu: <i>({restaurant.productCount} products)</i>
             </h3>
@@ -109,7 +113,7 @@ export default function Restaurant() {
                         price={Number(product.price)}
                         gramaj={product.gramaj}
                         description={product.description}
-                        addable={true}
+                        addable={false}
                     />
                 ))}
             </div>
