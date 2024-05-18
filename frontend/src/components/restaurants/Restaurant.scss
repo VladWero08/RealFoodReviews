@@ -4,8 +4,13 @@
     padding: $l-padding;
 }
 
-.restaurant__wrapper h3 {
-    padding: $s-padding 0 ; 
+.restaurant__wrapper h1 { color: $purple-highlight; }
+.restaurant__wrapper h3 { padding: $s-padding 0; }
+
+.restaurant-title__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 // Menu title above the menu items

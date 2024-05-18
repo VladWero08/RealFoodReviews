@@ -4,7 +4,9 @@ import { isAddress } from "web3-validator";
 
 import MenuItem from "./MenuItem";
 import Review from "../review/Review";
+import ReviewForm from "../review/ReviewForm";
 import ButtonScrollToTop from "../helpers/ButtonScrollToTop";
+import ShoppingCart from "./ShoppingCart";
 
 import { restaurantContract, reviewContract } from "../../App";
 import "./Restaurant.scss"
@@ -20,6 +22,7 @@ export default function Restaurant() {
         "products": [],
     });
     const [reviews, setReviews] = useState([]);
+    const [products, setProducts] = useState([]); 
     
     const [showReviewArrow, setShowReviewArrow] = useState("↓");
     const [showReviews, setShowReviews] = useState(false);
@@ -91,8 +94,18 @@ export default function Restaurant() {
 
     return (
         <div className="restaurant__wrapper">
-            <h1>Restaurant {restaurant.name}</h1>
-            <h3>{getReviewRatingMessage()}</h3>
+            <div className="restaurant-title__wrapper">
+                <div>
+                    <h1>Restaurant {restaurant.name}</h1>
+                    <h3>{getReviewRatingMessage()}</h3>
+                </div>
+                <ShoppingCart
+                    restaurantAddress={id} 
+                    products={products} 
+                    setProducts={setProducts}
+                />
+            </div>
+            
             <p>{restaurant.description}</p>
             
             <h3 className="menu-title">
@@ -105,14 +118,21 @@ export default function Restaurant() {
                 {restaurant.products.map((product, index) => (
                     <MenuItem 
                         index={index}
+                        productID={Number(product.productID)}
                         name={product.name}
                         price={Number(product.price)}
                         gramaj={product.gramaj}
                         description={product.description}
                         addable={true}
+
+                        products={products}
+                        setProducts={setProducts}
                     />
                 ))}
             </div>
+
+            <h3>Add a review:</h3>
+            <ReviewForm restaurantAddress={id}/>
 
             <div className="reviews-title__wrapper">
                 <h3>Reviews: <i>({reviews.length})</i></h3>

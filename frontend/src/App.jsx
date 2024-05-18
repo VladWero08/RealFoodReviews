@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Home from "./components/home/Home";
 import Navbar from "./components/navigation/Navbar";
+import Orders from "./components/orders/Orders";
 import Restaurant from "./components/restaurants/Restaurant";
 import RestaurantOwner from "./components/restaurants/RestaurantOwner";
 import RestaurantsList from "./components/restaurants/RestaurantsList";
@@ -38,6 +39,7 @@ function App() {
         
         <Routes>
           <Route index element={<Home/>}/>
+          <Route path="/user/my-orders/" element={<Orders/>}/>
           <Route path="/restaurants/my-restaurant/" element={<RestaurantOwner/>}/>
           <Route path="/restaurants" element={<RestaurantsList/>}/>
           <Route path="/restaurants/:id" element={<Restaurant/>}/>

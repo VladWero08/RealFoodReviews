@@ -36,6 +36,14 @@
     text-decoration: none;
 }
 
+.navbar__link-wallet a {
+    color: $purple-highlight;
+    font-weight: 500;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+
 // NAVBAR BUTTONS
 .navbar__buttons {
     flex: 3;

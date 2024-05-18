@@ -1,0 +1,36 @@
+@import "../../css/style.scss";
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: $s-padding;
+
+    margin-top: $s-padding;
+}
+
+.review-inputs {
+    background: rgba( 255, 255, 255, 0.35 );
+    backdrop-filter: blur( 6.5px );
+    -webkit-backdrop-filter: blur( 6.5px );
+    border-radius: 10px;
+    outline: none;
+    border: none;   
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+
+    border-radius: 4px;
+}
+
+.btn-submit {
+    background: $blue-highlight;
+    color: $white;
+
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    border-radius: $xs-padding;
+    padding: $s-padding;
+    max-width: 80px;
+}
+.btn-submit:hover { 
+    background: $blue-darker-highlight;
+    transition: 0.4s;
+    cursor: pointer; 
+}

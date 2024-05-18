@@ -42,7 +42,6 @@ export default function ProductForm({address}) {
 
             <div className="product-form">
                 <TextField 
-                    id="outlined-basic" 
                     label="Name*" 
                     variant="outlined"
                     onChange={(event) => {setName(event.target.value);}}
@@ -51,7 +50,7 @@ export default function ProductForm({address}) {
                     <TextField 
                         className="product-form__box-input" 
                         inputProps={{ type: 'number'}}
-                        label="Price* (ETH)" 
+                        label="Price* (RFR)" 
                         variant="outlined"
                         onChange={(event) => {setPrice(event.target.value);}}
                     /> 
@@ -65,7 +64,6 @@ export default function ProductForm({address}) {
                 </div>
 
                 <TextField 
-                    id="outlined-basic" 
                     label="Description*"
                     multiline
                     rows={4} 
