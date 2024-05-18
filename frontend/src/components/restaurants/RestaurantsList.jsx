@@ -26,7 +26,7 @@ export default function RestaurantsList() {
                 const description = restaurantsInBlockchain.restaurantDescriptions[i];
                 const productCount = Number(restaurantsInBlockchain.restautrantProductCounts[i]);
                 
-                const reviews = await reviewContract.methods.getUserReviewsForRestaurant(address).call();
+                const reviews = await reviewContract.methods.getReviewsForRestaurant(address).call();
                 const reviewRating = getReviewRatingMessage(reviews);
 
                 restaurantsObjects.push({

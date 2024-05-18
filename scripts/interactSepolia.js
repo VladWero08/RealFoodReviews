@@ -94,7 +94,7 @@ async function deploy() {
     }
 
     async function getReviewsForRestaurant(token, restaurantAddress) {
-        let reviews = await token.getUserReviewsForRestaurant(restaurantAddress);
+        let reviews = await token.getReviewsForRestaurant(restaurantAddress);
         
         console.log('Reviews for Restaurant:', restaurantAddress);
         for (let i = 0; i < reviews.length; i++) {

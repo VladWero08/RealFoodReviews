@@ -42,7 +42,7 @@ contract Review {
 
     }
 
-    function getUserReviewsForRestaurant(address _restaurantAddress) external view returns (ReviewStruct[] memory) {
+    function getReviewsForRestaurant(address _restaurantAddress) external view returns (ReviewStruct[] memory) {
         return restaurantReviews[_restaurantAddress];
     }
 
