@@ -5,7 +5,7 @@
 }
 
 .restaurant__wrapper h1 { color: $purple-highlight; }
-.restaurant__wrapper h3 { padding: $s-padding 0; }
+.restaurant__wrapper h3 { padding-top: $s-padding; }
 
 .restaurant-title__wrapper {
     display: flex;
@@ -19,7 +19,7 @@
     margin-bottom: $s-padding;
 }
 
-// Menu items
+// Menu items0x2asfsdvawdvawrvafv
 .menu-items {
     display: grid;
     grid-template-columns: repeat(2, auto);
