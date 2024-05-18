@@ -34,7 +34,7 @@ export default function Restaurant() {
         let restaurantData = await restaurantContract.methods.getRestaurant(address).call();
         // transform the number of products from bigint to number
         restaurantData.productCount = Number(restaurantData.productCount);
-        const restaurantReviews = await reviewContract.methods.getUserReviewsForRestaurant(address).call();
+        const restaurantReviews = await reviewContract.methods.getReviewsForRestaurant(address).call();
         
         setRestaurant(restaurantData);
         setReviews(restaurantReviews);

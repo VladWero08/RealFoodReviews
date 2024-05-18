@@ -45,7 +45,7 @@
           "type": "address"
         }
       ],
-      "name": "getUserReviewsForRestaurant",
+      "name": "getReviewsForRestaurant",
       "outputs": [
         {
           "components": [
