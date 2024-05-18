@@ -99,7 +99,8 @@ export default function Restaurant() {
                     <h1>Restaurant {restaurant.name}</h1>
                     <h3>{getReviewRatingMessage()}</h3>
                 </div>
-                <ShoppingCart 
+                <ShoppingCart
+                    restaurantAddress={id} 
                     products={products} 
                     setProducts={setProducts}
                 />
@@ -117,6 +118,7 @@ export default function Restaurant() {
                 {restaurant.products.map((product, index) => (
                     <MenuItem 
                         index={index}
+                        productID={Number(product.productID)}
                         name={product.name}
                         price={Number(product.price)}
                         gramaj={product.gramaj}

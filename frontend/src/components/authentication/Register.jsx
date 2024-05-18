@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Switch from '@mui/material/Switch';
 import MetamaskButtonConnect from "../metamask/MetamaskButtonConnect";
-import { userContract, restaurantContract } from "../../App";
+import { userContract, restaurantContract, myERC20Contract } from "../../App";
 
 import logo from "../../assets/logo.png";
 
@@ -58,6 +58,13 @@ export default function Register() {
                 return;
             });   
             
+        // try to allocate founds to the account
+        await myERC20Contract.methods.deposit("100").send({from: address})
+            .on("error", (error) => {
+                alert("Couldn't allocate register bonus to the user.");
+                returnl
+            });
+
         // also set the account type in redux 
         // and local storage to "user"
         dispatch(setAccountType("user"));
@@ -79,11 +86,19 @@ export default function Register() {
             return;
         }
 
+        // try to create the restaurant
         await restaurantContract.methods.createRestaurant(address, restaurantName, restaurantDescription).send({from: address})
             .on("error", (error) => {
                 alert("The account could not be created. Try again.");
                 return;
             })
+
+        // try to allocate founds to the account
+        await myERC20Contract.methods.deposit("100").send({from: address})
+            .on("error", (error) => {
+                alert("Couldn't allocate register bonus to the user.");
+                return;
+            });
 
         // also set the account type in redux 
         // and local storage to "restaurant"

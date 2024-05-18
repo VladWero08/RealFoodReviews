@@ -50,7 +50,7 @@ export default function ProductForm({address}) {
                     <TextField 
                         className="product-form__box-input" 
                         inputProps={{ type: 'number'}}
-                        label="Price* (ETH)" 
+                        label="Price* (RFR)" 
                         variant="outlined"
                         onChange={(event) => {setPrice(event.target.value);}}
                     /> 

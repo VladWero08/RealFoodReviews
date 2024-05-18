@@ -1,0 +1,28 @@
+@import "../../css/style.scss";
+
+.orders__wrapper {
+    padding: $l-padding;
+}
+
+.orders__wrapper h1 {
+    margin-bottom: $m-padding;
+}
+
+.order-cards {
+    display: flex;
+    flex-direction: column;
+    gap: $s-padding;
+}
+
+.order-card {
+    box-shadow: 0 4px 16px 0 gray;
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    
+    padding: $m-padding;
+}
+
+.order-card h3 { margin-bottom: $s-padding; }
+.purple { color: $purple-highlight; }
+.blue { color: $blue-highlight; }

@@ -1,10 +1,11 @@
 import "./MenuItem.scss"
 
 export default function MenuItem(props) {
-    const {index, name, price, gramaj, description, addable, products, setProducts} = props;
+    const {index, productID, name, price, gramaj, description, addable, products, setProducts} = props;
 
     const getProduct = () => {
         return {
+            "productID": productID,
             "name": name,
             "price": price,
             "gramaj": gramaj,

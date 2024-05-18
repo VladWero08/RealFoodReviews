@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useSelector } from 'react-redux';
 
 import { Modal } from '@mui/material';
 import "./ShoppingCart.scss";
 import shoppingCart from "../../assets/shopping-cart.svg";
 
-export default function ShoppingCart({products, setProducts}) {
+import { myERC20Contract } from "../../App";
+
+export default function ShoppingCart({restaurantAddress, products, setProducts}) {
+    const address = useSelector(state => state.walletAddress);
     const [modal, setModal] = useState(false);
-    const totalCartPrice = products.reduce((sum, product) => sum + product.price, 0);;
+    const totalCartPrice = products.reduce((sum, product) => sum + product.price, 0);
 
     const handleDeleteItemFromCart = (index) => {
         products.splice(index, 1);
@@ -16,6 +20,27 @@ export default function ShoppingCart({products, setProducts}) {
         }
 
         setProducts([...products]);
+    }
+
+    const handleOrder = async () => {
+        if (products.length == 0) {
+            alert("Shopping cart is empty! Please add items before ordering.");
+            return;
+        }
+
+        const productsIDs = products.map(product => product.productID);
+        
+        await myERC20Contract.methods.placeOrder(restaurantAddress, productsIDs).send({from: address})
+            .on("receipt", (receipt) => {
+                if (receipt.status) {
+                    alert(`Order has made succesfully. You have paid ${totalCartPrice} RFR for this order.`);
+                } else {
+                    alert("Order was not placed successfully. Try again...");
+                }
+            });
+
+        setProducts([]);
+        setModal(false);
     }
 
     return (
@@ -60,7 +85,10 @@ export default function ShoppingCart({products, setProducts}) {
 
                     <div className="cart-total">
                         <div className="cart-product__price">Total: {totalCartPrice} ETH</div>
-                        <div className="btn-order">
+                        <div 
+                            className="btn-order"
+                            onClick={handleOrder}
+                        >
                             ORDER
                         </div>
                     </div>

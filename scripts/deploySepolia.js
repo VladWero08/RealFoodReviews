@@ -107,10 +107,10 @@ async function deploy() {
 
     copyCompiledContractsJSONs();
     createContractConstantsFile(
-        token.address,
         token2.address,
-        token3.address,
         token4.address,
+        token.address,
+        token3.address,
         token5.address,
     );
 }

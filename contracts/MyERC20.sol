@@ -27,9 +27,9 @@ contract MyERC20{
     mapping (address => mapping(address => bool)) public userRestaurantOrders;
 
 
-    string public name ="Token optional BC";               
+    string public name ="Real Food Reviews Token";               
     uint8 public decimals = 0;                
-    string public symbol = 'TOP';  
+    string public symbol = 'RFR';  
 
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
     event Transfer(address indexed from, address indexed to, uint tokens);
