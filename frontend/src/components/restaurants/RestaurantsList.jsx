@@ -52,7 +52,7 @@ export default function RestaurantsList() {
         let reviewRating = 0;
 
         for (let i = 0; i < reviews.length; i++) {
-            reviewRating += reviews[i].rating;
+            reviewRating += Number(reviews[i].rating);
         }
 
         return `${(reviewRating / reviews.length).toFixed(2)} / 5 ⭐`;

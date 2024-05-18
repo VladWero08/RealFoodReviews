@@ -60,7 +60,7 @@ export default function Restaurant() {
         let reviewRating = 0;
 
         for (let i = 0; i < reviews.length; i++) {
-            reviewRating += reviews[i].rating;
+            reviewRating += Number(reviews[i].rating);
         }
 
         return `${(reviewRating / reviews.length).toFixed(2)} / 5 ⭐`;
@@ -147,7 +147,7 @@ export default function Restaurant() {
             {showReviews && (reviews.map((review, index) => (
                 <Review
                     index={index}
-                    rating={review.rating}
+                    rating={Number(review.rating)}
                     description={review.description}
                 />
             )))}
